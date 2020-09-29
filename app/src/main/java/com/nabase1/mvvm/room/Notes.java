@@ -1,4 +1,4 @@
-package com.nabase1.mvvm;
+package com.nabase1.mvvm.room;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;

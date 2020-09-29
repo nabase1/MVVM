@@ -1,4 +1,4 @@
-package com.nabase1.mvvm;
+package com.nabase1.mvvm.room;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -17,7 +17,8 @@ public abstract class NoteDatabase extends RoomDatabase {
 
     public static synchronized NoteDatabase getInstance(Context context){
         if(instance == null){
-            instance = Room.databaseBuilder(context.getApplicationContext(), NoteDatabase.class, "note_database")
+            instance = Room.databaseBuilder(context.getApplicationContext(),
+                    NoteDatabase.class, "note_database")
                     .fallbackToDestructiveMigration()
                     .addCallback(roomCallback)
                     .build();

@@ -1,4 +1,4 @@
-package com.nabase1.mvvm;
+package com.nabase1.mvvm.room;
 
 
 import androidx.lifecycle.LiveData;
@@ -8,9 +8,9 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import java.util.List;
+import com.nabase1.mvvm.room.Notes;
 
-import static android.provider.ContactsContract.CommonDataKinds.*;
+import java.util.List;
 
 @Dao
 public interface NoteDao {

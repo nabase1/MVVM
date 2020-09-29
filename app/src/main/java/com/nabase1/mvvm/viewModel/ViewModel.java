@@ -1,10 +1,13 @@
-package com.nabase1.mvvm;
+package com.nabase1.mvvm.viewModel;
 
 import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+
+import com.nabase1.mvvm.repository.NoteRepository;
+import com.nabase1.mvvm.room.Notes;
 
 import java.util.List;
 
@@ -15,10 +18,10 @@ public class ViewModel extends AndroidViewModel {
 
     public ViewModel(@NonNull Application application) {
         super(application);
-
         mNoteRepository = new NoteRepository(application);
         allNotes = mNoteRepository.getAllNote();
     }
+
 
     public void insert(Notes notes){
         mNoteRepository.insert(notes);
@@ -32,7 +35,7 @@ public class ViewModel extends AndroidViewModel {
         mNoteRepository.delete(notes);
     }
 
-    public void deletAll(){
+    public void deleteAll(){
         mNoteRepository.deleteAll();
     }
 

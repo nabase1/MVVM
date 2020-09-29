@@ -1,9 +1,13 @@
-package com.nabase1.mvvm;
+package com.nabase1.mvvm.repository;
 
 import android.app.Application;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
+
+import com.nabase1.mvvm.room.NoteDao;
+import com.nabase1.mvvm.room.NoteDatabase;
+import com.nabase1.mvvm.room.Notes;
 
 import java.util.List;
 
@@ -26,7 +30,7 @@ public class NoteRepository {
     }
 
     public void delete(Notes note){
-        new deleteAllNotesAsyncTask(mNoteDao).execute(note);
+        new deleteNotesAsyncTask(mNoteDao).execute(note);
     }
 
     public void deleteAll(){
@@ -79,7 +83,7 @@ public class NoteRepository {
         }
     }
 
-    private static class deleteAllNotesAsyncTask extends AsyncTask<Notes, Void, Void>{
+    private static class deleteAllNotesAsyncTask extends AsyncTask<Void, Void, Void>{
 
         private NoteDao mNoteDao;
 
@@ -87,7 +91,7 @@ public class NoteRepository {
             this.mNoteDao = noteDao;
         }
         @Override
-        protected Void doInBackground(Notes... notes) {
+        protected Void doInBackground(Void... notes) {
             mNoteDao.deleteAllNotes();
             return null;
         }
