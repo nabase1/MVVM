@@ -1,5 +1,6 @@
 package com.nabase1.mvvm;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
@@ -7,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -30,14 +32,12 @@ public class MainActivity extends AppCompatActivity {
 
         mViewModel = new ViewModelProvider.AndroidViewModelFactory(getApplication()).create(ViewModel.class);
 
-        mViewModel.getAllNotes().observe(this, new Observer<List<Notes>>() {
-            @Override
-            public void onChanged(List<Notes> notes) {
-               mNotesAdapter.update(notes);
-            }
-        });
+        mViewModel.getAllNotes().observe(this, notes -> mNotesAdapter.update(notes));
 
         initialize(mBinding.recyclerview);
+        mBinding.floatingActionButton.setOnClickListener(view -> {
+                startActivityForResult(new Intent(this, CreateNote.class), Constants.ADD_NOTE_REQUEST_CODE);
+        });
 
     }
 
@@ -58,6 +58,22 @@ public class MainActivity extends AppCompatActivity {
         if(mNotesAdapter == null){
             mNotesAdapter = new NotesAdapter();
             recyclerView.setAdapter(mNotesAdapter);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == Constants.ADD_NOTE_REQUEST_CODE && resultCode == RESULT_OK){
+                    String title = data.getStringExtra(Constants.TEXT_TITLE);
+                    String desc = data.getStringExtra(Constants.TEXT_DESCRIPTION);
+                    int priority = data.getIntExtra(Constants.TEXT_PRIORITY, 1);
+
+                    Notes notes = new Notes(title,desc,priority);
+                    mViewModel.insert(notes);
+        }else {
+            Toast.makeText(this, "Note Cancelled", Toast.LENGTH_SHORT).show();
         }
     }
 }
