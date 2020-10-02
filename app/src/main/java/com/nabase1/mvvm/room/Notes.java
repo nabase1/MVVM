@@ -12,10 +12,12 @@ public class Notes {
     private String title;
     private String description;
     private int priority;
+    private long timeStamp;
 
-    public Notes(String title, String description, int priority) {
+    public Notes(String title, String description, long timeStamp, int priority) {
         this.title = title;
         this.description = description;
+        this.timeStamp = timeStamp;
         this.priority = priority;
     }
 
@@ -33,6 +35,10 @@ public class Notes {
 
     public String getDescription() {
         return description;
+    }
+
+    public long getTimeStamp() {
+        return timeStamp;
     }
 
     public int getPriority() {

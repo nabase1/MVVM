@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">MVVM</string>
+    <string name="app_name">My Diary</string>
+    <string name="create_new_diary">Create Diary</string>
+    <string name="update_diary">Update Diary</string>
+    <string name="title">Title</string>
+    <string name="created">Created:</string>
 </resources>

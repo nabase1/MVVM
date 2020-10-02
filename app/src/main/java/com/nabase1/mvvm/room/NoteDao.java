@@ -8,7 +8,6 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.nabase1.mvvm.room.Notes;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ public interface NoteDao {
     @Query("Delete FROM note_table")
     void deleteAllNotes();
 
-    @Query("SELECT * FROM note_table ORDER BY priority DESC")
+    @Query("SELECT * FROM note_table ORDER BY timeStamp DESC")
     LiveData<List<Notes>> getAllNotes();
 
 }

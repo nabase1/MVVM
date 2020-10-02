@@ -19,7 +19,7 @@ import java.util.List;
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.AdapterViewHolder>{
 
     private List<Notes> mNotesList;
-    private ItemRowBinding mItemRowBinding;
+    private OnItemClickListener mListener;
 
     public NotesAdapter() {
         mNotesList = new ArrayList<>();
@@ -56,13 +56,24 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.AdapterViewH
         notifyDataSetChanged();
     }
 
-    public class AdapterViewHolder extends RecyclerView.ViewHolder{
+    public Notes getNoteAt(int position){
+        return mNotesList.get(position);
+    }
+
+    public class AdapterViewHolder extends RecyclerView.ViewHolder {
 
         ItemRowBinding mBinding;
         public AdapterViewHolder(@NonNull View itemView) {
             super(itemView);
 
             mBinding = DataBindingUtil.bind(itemView);
+
+            itemView.setOnClickListener(v -> {
+                int position = getAdapterPosition();
+                if(mListener != null && position != RecyclerView.NO_POSITION){
+                    mListener.onItemClick(mNotesList.get(position));
+                }
+            });
         }
 
         public void bind(Notes notes){
@@ -72,5 +83,13 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.AdapterViewH
 
         }
 
+    }
+
+    public void setOnclickListener(OnItemClickListener listener){
+        this.mListener = listener;
+    }
+
+    public interface OnItemClickListener{
+        void onItemClick(Notes notes);
     }
 }
