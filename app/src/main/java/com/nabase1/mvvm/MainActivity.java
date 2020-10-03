@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewModel mViewModel;
     private ActivityMainBinding mBinding;
     private NotesAdapter mNotesAdapter;
+    private String TAG = getClass().getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+
+
         if(requestCode == Constants.ADD_NOTE_REQUEST_CODE && resultCode == RESULT_OK){
                     String title = data.getStringExtra(Constants.TEXT_TITLE);
                     String desc = data.getStringExtra(Constants.TEXT_DESCRIPTION);
@@ -120,7 +123,12 @@ public class MainActivity extends AppCompatActivity {
 
         }else if(requestCode == Constants.EDIT_NOTE_REQUEST_CODE && resultCode == RESULT_OK){
 
+
             int id = getIntent().getIntExtra(Constants.EXTRA_ID, -1);
+            Log.d(TAG, "title"+ data.getStringExtra(Constants.TEXT_TITLE));
+            Log.d(TAG, "desc" + data.getStringExtra(Constants.TEXT_DESCRIPTION));
+            Log.d(TAG, "id" + String.valueOf(id));
+
             if(id != -1){
                 String title = data.getStringExtra(Constants.TEXT_TITLE);
                 String desc = data.getStringExtra(Constants.TEXT_DESCRIPTION);

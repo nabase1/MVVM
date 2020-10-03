@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.nabase1.mvvm.databinding.ActivityCreateNoteBinding;
 
@@ -63,7 +64,7 @@ public class CreateNote extends AppCompatActivity {
         String desc = mBinding.editTextBody.getText().toString();
         //int priority = mBinding.numberPicker.getValue();
 
-        Intent data = new Intent();
+        Intent data = new Intent(this, MainActivity.class);
 
         data.putExtra(Constants.TEXT_TITLE, title);
         data.putExtra(Constants.TEXT_DESCRIPTION,desc);
@@ -73,13 +74,13 @@ public class CreateNote extends AppCompatActivity {
         int id = getIntent().getIntExtra(Constants.EXTRA_ID, -1);
 
         if(id != -1){
+           Toast.makeText(this, "id is not empty" + id, Toast.LENGTH_SHORT).show();
             long timestamp = getIntent().getLongExtra(Constants.TIME_STAMP, Calendar.getInstance().getTimeInMillis());
             data.putExtra(Constants.EXTRA_ID, id);
             data.putExtra(Constants.TIME_STAMP, timestamp);
         }
 
-        setResult(RESULT_OK);
-
+        setResult(RESULT_OK, data);
         finish();
     }
 
