@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,7 +20,6 @@ import com.nabase1.mvvm.room.Notes;
 import com.nabase1.mvvm.viewModel.ViewModel;
 
 import java.util.Calendar;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -70,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra(Constants.TEXT_TITLE, notes.getTitle());
             intent.putExtra(Constants.TEXT_DESCRIPTION, notes.getDescription());
             intent.putExtra(Constants.TIME_STAMP, notes.getTimeStamp());
-            intent.putExtra(Constants.TEXT_PRIORITY, notes.getPriority());
+            intent.putExtra(Constants.TEXT_PRIORITY, notes.getBackgroundColor());
 
             startActivityForResult(intent, Constants.EDIT_NOTE_REQUEST_CODE);
         });
@@ -127,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
             int id = getIntent().getIntExtra(Constants.EXTRA_ID, -1);
             Log.d(TAG, "title"+ data.getStringExtra(Constants.TEXT_TITLE));
             Log.d(TAG, "desc" + data.getStringExtra(Constants.TEXT_DESCRIPTION));
-            Log.d(TAG, "id" + String.valueOf(id));
+            Log.d(TAG, "id" + id);
 
             if(id != -1){
                 String title = data.getStringExtra(Constants.TEXT_TITLE);

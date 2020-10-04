@@ -64,4 +64,7 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
 
+    //color picker dependencies
+    implementation 'petrov.kristiyan:colorpicker-library:1.1.10'
+
 }

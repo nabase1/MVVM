@@ -11,14 +11,14 @@ public class Notes {
 
     private String title;
     private String description;
-    private int priority;
+    private int backgroundColor;
     private long timeStamp;
 
-    public Notes(String title, String description, long timeStamp, int priority) {
+    public Notes(String title, String description, long timeStamp, int backgroundColor) {
         this.title = title;
         this.description = description;
         this.timeStamp = timeStamp;
-        this.priority = priority;
+        this.backgroundColor = backgroundColor;
     }
 
     public void setId(int id) {
@@ -41,7 +41,7 @@ public class Notes {
         return timeStamp;
     }
 
-    public int getPriority() {
-        return priority;
+    public int getBackgroundColor() {
+        return backgroundColor;
     }
 }

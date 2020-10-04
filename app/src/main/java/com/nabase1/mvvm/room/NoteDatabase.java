@@ -8,6 +8,8 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.nabase1.mvvm.R;
+
 import java.util.Calendar;
 
 @Database(entities = Notes.class, version = 1)
@@ -48,7 +50,7 @@ public abstract class NoteDatabase extends RoomDatabase {
         protected Void doInBackground(Void... voids) {
 
             long timeStamp = Calendar.getInstance().getTimeInMillis();
-            mNoteDao.insert(new Notes("title 1", "description 1", timeStamp, 1));
+            mNoteDao.insert(new Notes("title 1", "description 1", timeStamp, R.color.white));
             return null;
         }
     }

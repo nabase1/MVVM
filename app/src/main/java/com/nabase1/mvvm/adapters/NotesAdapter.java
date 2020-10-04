@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.nabase1.mvvm.CreateNote;
+import com.nabase1.mvvm.MainActivity;
 import com.nabase1.mvvm.R;
 import com.nabase1.mvvm.databinding.ItemRowBinding;
 import com.nabase1.mvvm.room.Notes;
@@ -77,9 +79,20 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.AdapterViewH
         }
 
         public void bind(Notes notes){
+
+//            String multiLines = notes.getDescription();
+//            String[] diary;
+//            diary = multiLines.split("\n");
+//            String desc;
+//            if(diary.length > 0){
+//               // desc = diary[1];
+//            }else {
+//                 desc = diary[0];
+//            }
+
             mBinding.textViewTitle.setText(notes.getTitle());
-            mBinding.textViewDescription.setText(notes.getDescription());
-            mBinding.textViewPriority.setText(String.valueOf(notes.getPriority()));
+           // mBinding.textViewDescription.setText(desc + "..." );
+            mBinding.textViewPriority.setText(new CreateNote().setDate(notes.getTimeStamp()));
 
         }
 

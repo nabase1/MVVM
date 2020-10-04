@@ -3,9 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/item_back_color"
+        android:icon="@drawable/ic_baseline_color_lens_24"
+        android:title=""
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/item_text_color"
+        android:icon="@drawable/ic_baseline_colorize_24"
+        android:title=""
+        app:showAsAction="ifRoom"/>
+
+    <item
         android:id="@+id/item_save"
         android:icon="@drawable/ic_baseline_check_24"
         android:title=""
         app:showAsAction="ifRoom"/>
+
+
+
+
 
 </menu>
