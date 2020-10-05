@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 import petrov.kristiyan.colorpicker.ColorPicker;
 
@@ -32,7 +33,7 @@ public class CreateNote extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_create_note);
 
         mSharedPreferences = getSharedPreferences(TAG, MODE_PRIVATE);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_close_24);
+        Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_baseline_close_24);
         Intent intent = getIntent();
 
         if(intent.hasExtra(Constants.EXTRA_ID)){
@@ -108,7 +109,7 @@ public class CreateNote extends AppCompatActivity {
 
         if(id != -1){
             long timestamp = getIntent().getLongExtra(Constants.TIME_STAMP, Calendar.getInstance().getTimeInMillis());
-            
+
             data.putExtra(Constants.EXTRA_ID, id);
             data.putExtra(Constants.TIME_STAMP, timestamp);
         }

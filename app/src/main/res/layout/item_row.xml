@@ -11,7 +11,6 @@
         android:padding="@dimen/padding"
         android:layout_marginTop="@dimen/margins_around"
         android:layout_marginEnd="@dimen/margins_around"
-        android:layout_marginBottom="@dimen/margins_around"
         android:elevation="5dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,7 +24,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="title"
+                android:text=""
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

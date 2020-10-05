@@ -72,9 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
             startActivityForResult(intent, Constants.EDIT_NOTE_REQUEST_CODE);
         });
-
-
-
     }
 
     /* initialize recyclerView */
@@ -119,10 +116,12 @@ public class MainActivity extends AppCompatActivity {
                     Notes notes = new Notes(title,desc,timestamp,priority);
                     mViewModel.insert(notes);
 
+            Toast.makeText(this, "Saved Successfully!", Toast.LENGTH_SHORT).show();
+
         }else if(requestCode == Constants.EDIT_NOTE_REQUEST_CODE && resultCode == RESULT_OK){
 
 
-            int id = getIntent().getIntExtra(Constants.EXTRA_ID, -1);
+            int id = data.getIntExtra(Constants.EXTRA_ID, -1);
             Log.d(TAG, "title"+ data.getStringExtra(Constants.TEXT_TITLE));
             Log.d(TAG, "desc" + data.getStringExtra(Constants.TEXT_DESCRIPTION));
             Log.d(TAG, "id" + id);
@@ -136,11 +135,10 @@ public class MainActivity extends AppCompatActivity {
                 Notes notes = new Notes(title,desc,timestamp,priority);
                 notes.setId(id);
                 mViewModel.update(notes);
+                Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
             }else {
                 Toast.makeText(this, "Problem Updating", Toast.LENGTH_SHORT).show();
             }
-        } else {
-            Toast.makeText(this, "Note Cancelled", Toast.LENGTH_SHORT).show();
         }
     }
 }
