@@ -6,22 +6,43 @@
         android:id="@+id/item_back_color"
         android:icon="@drawable/ic_baseline_color_lens_24"
         android:title=""
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/item_text_color"
         android:icon="@drawable/ic_baseline_colorize_24"
         android:title=""
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/item_save"
         android:icon="@drawable/ic_baseline_check_24"
         android:title=""
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
 
+    <item
+        android:title="menu"
+        android:icon="@drawable/ic_baseline_more_vert_24"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:title="Export"
+                android:id="@+id/item_saveFile"
+                app:showAsAction="never"/>
 
+            <item android:id="@+id/item_read"
+                android:title="Read File"
+                app:showAsAction="never"/>
 
+            <item android:id="@+id/item_speech_to_text"
+                android:title="Speak To Me"
+                app:showAsAction="never"/>
 
+            <item android:id="@+id/item_text_to_speech"
+                android:title="Read For Me"
+                app:showAsAction="never"/>
+        </menu>
+
+    </item>
 
 </menu>
