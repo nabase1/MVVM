@@ -35,7 +35,7 @@
                 app:showAsAction="never"/>
 
             <item android:id="@+id/item_speech_to_text"
-                android:title="Speak To Me"
+                android:title="Speak To Diary"
                 app:showAsAction="never"/>
 
             <item android:id="@+id/item_text_to_speech"
