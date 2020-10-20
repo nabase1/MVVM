@@ -31,15 +31,19 @@
                 app:showAsAction="never"/>
 
             <item android:id="@+id/item_read"
-                android:title="Read File"
+                android:title="Open File"
                 app:showAsAction="never"/>
 
             <item android:id="@+id/item_speech_to_text"
-                android:title="Speak To Diary"
+                android:title="Talk To Diary"
+                app:showAsAction="never"/>
+
+            <item android:id="@+id/item_stop_speech_to_text"
+                android:title="Done Talking"
                 app:showAsAction="never"/>
 
             <item android:id="@+id/item_text_to_speech"
-                android:title="Read For Me"
+                android:title="Diary Reads"
                 app:showAsAction="never"/>
         </menu>
 

@@ -67,4 +67,6 @@ dependencies {
     //color picker dependencies
     implementation 'petrov.kristiyan:colorpicker-library:1.1.10'
 
+    //droidSpeech dependencies
+    implementation 'com.github.vikramezhil:DroidSpeech:v2.0.3'
 }

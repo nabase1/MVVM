@@ -24,6 +24,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.nabase1.mvvm.databinding.ActivityCreateNoteBinding;
+import com.vikramezhil.droidspeech.DroidSpeech;
+import com.vikramezhil.droidspeech.OnDSListener;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -45,9 +47,10 @@ public class CreateNote extends AppCompatActivity {
     private SharedPreferences mSharedPreferences;
     private String TAG = getClass().getSimpleName();
     private long mTimeStamp;
-    private boolean speaking = false;
-    ArrayList<String> mArrayList;
     private TextToSpeech mTextToSpeech;
+    private DroidSpeech mDroidSpeech;
+    private MenuItem mTalking_item;
+    private MenuItem mDone_talking_item;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,7 @@ public class CreateNote extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_baseline_close_24);
 
         textToSpeech();
+        speechToText();
 
         Intent intent = getIntent();
 
@@ -92,6 +96,11 @@ public class CreateNote extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.menu_items, menu);
+
+        mDone_talking_item = menu.findItem(R.id.item_stop_speech_to_text);
+        mDone_talking_item.setVisible(false);
+
+        mTalking_item = menu.findItem(R.id.item_speech_to_text);
         return true;
     }
 
@@ -117,7 +126,17 @@ public class CreateNote extends AppCompatActivity {
 
         if(id == R.id.item_speech_to_text){
             checkPermission();
-            speechToText(mArrayList);
+            mBinding.editTextBody.setHint("Diary is listening to you...");
+            mDroidSpeech.startDroidSpeechRecognition();
+            mTalking_item.setVisible(false);
+            mDone_talking_item.setVisible(true);
+        }
+
+        if(id == R.id.item_stop_speech_to_text){
+            mDroidSpeech.closeDroidSpeechOperations();
+            Toast.makeText(this, "Diary Stopped Listening", Toast.LENGTH_SHORT).show();
+            mTalking_item.setVisible(true);
+            mDone_talking_item.setVisible(false);
         }
 
         if(id == R.id.item_text_to_speech){
@@ -156,6 +175,8 @@ public class CreateNote extends AppCompatActivity {
         setResult(RESULT_OK, data);
         finish();
     }
+
+
 
     public String setDate(Long timeStamp){
         Date date=new Date(timeStamp);
@@ -275,86 +296,46 @@ public class CreateNote extends AppCompatActivity {
         }
     }
 
-    private void speechToText(ArrayList<String> arrayList){
+    private void speechToText(){
 
-        mBinding.editTextBody.setHint("Speak To Me...");
-        SpeechRecognizer speechRecognizer = SpeechRecognizer.createSpeechRecognizer(getApplicationContext());
+        mDroidSpeech = new DroidSpeech(this, null);
 
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 3000);
-        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, "com.domain.app");
-      //  intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak To Me...");
-
-
-
-        speechRecognizer.setRecognitionListener(new RecognitionListener() {
+        mDroidSpeech.setOnDroidSpeechListener(new OnDSListener() {
             @Override
-            public void onReadyForSpeech(Bundle params) {
+            public void onDroidSpeechSupportedLanguages(String currentSpeechLanguage, List<String> supportedSpeechLanguages) {
 
             }
 
             @Override
-            public void onBeginningOfSpeech() {
+            public void onDroidSpeechRmsChanged(float rmsChangedValue) {
 
             }
 
             @Override
-            public void onRmsChanged(float rmsdB) {
-
-            }
-
-            @Override
-            public void onBufferReceived(byte[] buffer) {
-
-            }
-
-            @Override
-            public void onEndOfSpeech() {
-
-                if(speaking){
-                    Log.d("End", "speaking");
-                    speechRecognizer.startListening(intent);
+            public void onDroidSpeechLiveResult(String liveSpeechResult) {
+                if(liveSpeechResult != null){
+                   // mBinding.editTextBody.setText(mBinding.editTextBody.getText().toString() + " " +liveSpeechResult);
                 }
             }
 
             @Override
-            public void onError(int error) {
+            public void onDroidSpeechFinalResult(String finalSpeechResult) {
 
-            }
-
-            @Override
-            public void onResults(Bundle results) {
-                ArrayList<String> arrayList = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-
-                if(arrayList != null){
-                    mBinding.editTextBody.setText(mBinding.editTextBody.getText().toString() + " " +arrayList.get(0));
+                if(finalSpeechResult != null){
+                    mBinding.editTextBody.setText(mBinding.editTextBody.getText().toString() + " " +finalSpeechResult);
                 }
             }
 
             @Override
-            public void onPartialResults(Bundle partialResults) {
-                ArrayList<String> arrayList = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-
-                if(arrayList != null){
-                    mBinding.editTextBody.setText(mBinding.editTextBody.getText().toString() + " " +arrayList.get(0));
-                }
+            public void onDroidSpeechClosedByUser() {
+                Toast.makeText(CreateNote.this, "Diary Loves Your Voice", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onEvent(int eventType, Bundle params) {
-
+            public void onDroidSpeechError(String errorMsg) {
+                Log.d(TAG, errorMsg);
             }
         });
-
-        if(!speaking){
-            speechRecognizer.startListening(intent);
-            speaking = true;
-        }else {
-            speechRecognizer.stopListening();
-            speaking = false;
-        }
 
     }
 

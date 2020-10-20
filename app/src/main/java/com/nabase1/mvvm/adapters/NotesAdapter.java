@@ -10,7 +10,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nabase1.mvvm.CreateNote;
-import com.nabase1.mvvm.MainActivity;
 import com.nabase1.mvvm.R;
 import com.nabase1.mvvm.databinding.ItemRowBinding;
 import com.nabase1.mvvm.room.Notes;
