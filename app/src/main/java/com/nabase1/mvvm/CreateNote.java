@@ -7,6 +7,7 @@ import androidx.databinding.DataBindingUtil;
 
 import android.Manifest;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -27,9 +28,15 @@ import com.nabase1.mvvm.databinding.ActivityCreateNoteBinding;
 import com.vikramezhil.droidspeech.DroidSpeech;
 import com.vikramezhil.droidspeech.OnDSListener;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -121,7 +128,8 @@ public class CreateNote extends AppCompatActivity {
         }
 
         if(id == R.id.item_saveFile){
-            writeFile(mBinding.editTextBody.getText().toString());
+            storageUtils.writeFile(mBinding.editTextBody.getText().toString(),getApplicationContext(), setDate(mTimeStamp));
+           // writeToFile(mBinding.editTextBody.getText().toString(), getApplicationContext());
         }
 
         if(id == R.id.item_speech_to_text){
@@ -254,35 +262,6 @@ public class CreateNote extends AppCompatActivity {
                 });
 
         colorPicker.show();
-    }
-
-    private void writeFile(String text){
-        if(!mBinding.editTextBody.getText().toString().isEmpty()){
-            File file = new File(this.getFilesDir(), getString(R.string.app_name));
-            if(!file.exists()){
-                file.mkdir();
-            }
-
-            try {
-                File file1 = new File(file, setDate(mTimeStamp));
-                FileWriter fileWriter = new FileWriter(file1);
-                fileWriter.append(text);
-                fileWriter.flush();
-                fileWriter.close();
-
-                Toast.makeText(this, "File Saved On external storage", Toast.LENGTH_SHORT).show();
-
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-
-    }
-
-    private void readFile(){
-
     }
 
     private void checkPermission() {
