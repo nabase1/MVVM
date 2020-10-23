@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.Settings;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -127,11 +128,6 @@ public class CreateNote extends AppCompatActivity {
             textColorPicker();
         }
 
-        if(id == R.id.item_saveFile){
-            storageUtils.writeFile(mBinding.editTextBody.getText().toString(),getApplicationContext(), setDate(mTimeStamp));
-           // writeToFile(mBinding.editTextBody.getText().toString(), getApplicationContext());
-        }
-
         if(id == R.id.item_speech_to_text){
             checkPermission();
             mBinding.editTextBody.setHint("Diary is listening to you...");
@@ -180,8 +176,21 @@ public class CreateNote extends AppCompatActivity {
             data.putExtra(Constants.TIME_STAMP, timestamp);
         }
 
+        writeToFile();
         setResult(RESULT_OK, data);
         finish();
+    }
+
+    private void writeToFile(){
+        if(storageUtils.isExternalStorageWritable()){
+            storageUtils.setTextInStorage(Environment.getExternalStorageDirectory(),
+                    this, setDate(mTimeStamp), getString(R.string.app_name), mBinding.editTextBody.getText().toString());
+
+        }else {
+            Toast.makeText(this, "internal Storage", Toast.LENGTH_SHORT).show();
+            storageUtils.setTextInStorage(getDir(getString(R.string.app_name), MODE_PRIVATE),
+                    getApplicationContext(), setDate(mTimeStamp), getString(R.string.app_name),mBinding.editTextBody.getText().toString());
+        }
     }
 
 

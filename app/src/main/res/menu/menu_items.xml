@@ -25,11 +25,6 @@
         android:icon="@drawable/ic_baseline_more_vert_24"
         app:showAsAction="always">
         <menu>
-            <item
-                android:title="Export"
-                android:id="@+id/item_saveFile"
-                app:showAsAction="never"/>
-
             <item android:id="@+id/item_read"
                 android:title="Open File"
                 app:showAsAction="never"/>
