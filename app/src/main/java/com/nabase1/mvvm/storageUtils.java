@@ -1,9 +1,16 @@
 package com.nabase1.mvvm;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
+import android.provider.DocumentsContract;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -15,6 +22,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.Objects;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -71,33 +79,58 @@ public class storageUtils {
 
 
 
-    public static String readFromFile(Context context) {
-
-        String ret = "";
-
-        try {
-            InputStream inputStream = context.openFileInput("zak.txt");
-
-            if ( inputStream != null ) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString = "";
-                StringBuilder stringBuilder = new StringBuilder();
-
-                while ( (receiveString = bufferedReader.readLine()) != null ) {
-                    stringBuilder.append("\n").append(receiveString);
-                }
-
-                inputStream.close();
-                ret = stringBuilder.toString();
+   public static String readTextFromUri(Context context, Uri uri) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        try (InputStream inputStream =
+                     context.getContentResolver().openInputStream(uri);
+             BufferedReader reader = new BufferedReader(
+                     new InputStreamReader(Objects.requireNonNull(inputStream)))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line+"\n");
             }
         }
-        catch (FileNotFoundException e) {
-            Log.e("login activity", "File not found: " + e.toString());
+        return stringBuilder.toString();
+    }
+
+    public static String readPdfFile(String path, String text) {
+        try {
+
+            PdfReader reader = new PdfReader(path);
+            int n = reader.getNumberOfPages();
+            for (int i = 0; i < n; i++) {
+                text = PdfTextExtractor.getTextFromPage(reader, i + 1).trim() + "\n"; //Extracting the content from the different pages
+            }
+            Log.d("pdf", text);
+            reader.close();
+        } catch (Exception e) {
+            Log.d("Exception", e.getMessage());
+
+        }
+        return text;
+    }
+
+    public static void writeFileContent(Context context, Uri uri, String text)
+    {
+        try{
+            ParcelFileDescriptor pfd =
+                    context.getContentResolver().
+                            openFileDescriptor(uri, "w");
+
+            FileOutputStream fileOutputStream =
+                    new FileOutputStream(pfd.getFileDescriptor());
+
+            fileOutputStream.write(text.getBytes());
+            fileOutputStream.flush();
+            fileOutputStream.getFD().sync();
+
+            fileOutputStream.close();
+            pfd.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         } catch (IOException e) {
-            Log.e("login activity", "Can not read file: " + e.toString());
+            e.printStackTrace();
         }
 
-        return ret;
     }
 }

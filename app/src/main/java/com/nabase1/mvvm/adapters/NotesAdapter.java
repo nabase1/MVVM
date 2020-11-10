@@ -68,7 +68,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.AdapterViewH
             super(itemView);
 
             mBinding = DataBindingUtil.bind(itemView);
-
             itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
                 if(mListener != null && position != RecyclerView.NO_POSITION){
@@ -78,17 +77,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.AdapterViewH
         }
 
         public void bind(Notes notes){
-
-//            String multiLines = notes.getDescription();
-//            String[] diary;
-//            diary = multiLines.split("\n");
-//            String desc;
-//            if(diary.length > 0){
-//               // desc = diary[1];
-//            }else {
-//                 desc = diary[0];
-//            }
-
             mBinding.textViewTitle.setText(notes.getTitle());
            // mBinding.textViewDescription.setText(desc + "..." );
             mBinding.textViewPriority.setText(new CreateNote().setDate(notes.getTimeStamp()));

@@ -69,4 +69,7 @@ dependencies {
 
     //droidSpeech dependencies
     implementation 'com.github.vikramezhil:DroidSpeech:v2.0.3'
+
+    //itextpdf dependency
+    implementation 'com.itextpdf:itextg:5.5.10'
 }
