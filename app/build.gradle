@@ -72,4 +72,7 @@ dependencies {
 
     //itextpdf dependency
     implementation 'com.itextpdf:itextg:5.5.10'
+
+    //pdf viewer dependency
+    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
 }

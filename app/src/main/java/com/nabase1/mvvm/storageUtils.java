@@ -93,23 +93,6 @@ public class storageUtils {
         return stringBuilder.toString();
     }
 
-    public static String readPdfFile(String path, String text) {
-        try {
-
-            PdfReader reader = new PdfReader(path);
-            int n = reader.getNumberOfPages();
-            for (int i = 0; i < n; i++) {
-                text = PdfTextExtractor.getTextFromPage(reader, i + 1).trim() + "\n"; //Extracting the content from the different pages
-            }
-            Log.d("pdf", text);
-            reader.close();
-        } catch (Exception e) {
-            Log.d("Exception", e.getMessage());
-
-        }
-        return text;
-    }
-
     public static void writeFileContent(Context context, Uri uri, String text)
     {
         try{

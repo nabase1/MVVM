@@ -13,12 +13,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.nabase1.mvvm.databinding.ActivityCreateNoteBinding;
@@ -50,6 +50,7 @@ public class CreateNote extends AppCompatActivity {
     private DroidSpeech mDroidSpeech;
     private MenuItem mTalking_item;
     private MenuItem mDone_talking_item;
+    private boolean pdfViewer = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +113,16 @@ public class CreateNote extends AppCompatActivity {
             openFile();
         }
         if(id == R.id.item_save){
-            saveNote();
+            if(pdfViewer){
+                mBinding.pdfView.setVisibility(View.GONE);
+                mBinding.editTextBody.setVisibility(View.VISIBLE);
+                mBinding.textView2.setVisibility(View.VISIBLE);
+
+                pdfViewer = false;
+            }else {
+                saveNote();
+            }
+
         }
 
         if(id == R.id.item_back_color){
@@ -125,10 +135,19 @@ public class CreateNote extends AppCompatActivity {
 
         if(id == R.id.item_speech_to_text){
             checkPermission();
-            mBinding.editTextBody.setHint("Diary is listening to you...");
-            mDroidSpeech.startDroidSpeechRecognition();
-            mTalking_item.setVisible(false);
-            mDone_talking_item.setVisible(true);
+            if(pdfViewer){
+                mBinding.pdfView.setVisibility(View.GONE);
+                mBinding.editTextBody.setVisibility(View.VISIBLE);
+                mBinding.textView2.setVisibility(View.VISIBLE);
+
+                pdfViewer = false;
+
+            }
+                mBinding.editTextBody.setHint("Diary is listening to you...");
+                mDroidSpeech.startDroidSpeechRecognition();
+                mTalking_item.setVisible(false);
+                mDone_talking_item.setVisible(true);
+
         }
 
         if(id == R.id.item_stop_speech_to_text){
@@ -140,6 +159,7 @@ public class CreateNote extends AppCompatActivity {
 
         if(id == R.id.item_text_to_speech){
             mTextToSpeech.speak(mBinding.editTextBody.getText().toString(), TextToSpeech.QUEUE_FLUSH,null);
+            mTextToSpeech.speak(mBinding.pdfView.toString(), TextToSpeech.QUEUE_FLUSH, null);
         }
         return true;
     }
@@ -171,7 +191,7 @@ public class CreateNote extends AppCompatActivity {
             data.putExtra(Constants.TIME_STAMP, timestamp);
         }
 
-         createFile();
+        // createFile();
         //writeToFile();
         setResult(RESULT_OK, data);
         finish();
@@ -188,10 +208,6 @@ public class CreateNote extends AppCompatActivity {
         intent.putExtra(intent.EXTRA_MIME_TYPES, mimeTypes);
 
 
-        // Optionally, specify a URI for the file that should appear in the
-        // system file picker when it loads.
-       // intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, pickerInitialUri);
-
         startActivityForResult(intent, OPEN_FILE);
     }
 
@@ -201,25 +217,6 @@ public class CreateNote extends AppCompatActivity {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_TITLE, setDate(mTimeStamp));
-
-        // Optionally, specify a URI for the directory that should be opened in
-        // the system file picker when your app creates the document.
-       // intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, pickerInitialUri);
-
-        startActivityForResult(intent, CREATE_FILE);
-    }
-
-    public void openDirectory() {
-        // Choose a directory using the system's file picker.
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-
-        // Provide read access to files and sub-directories in the user-selected
-        // directory.
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-        // Optionally, specify a URI for the directory that should be opened in
-        // the system file picker when it loads.
-        //intent.putExtra(DocumentsContract.EXTRA_INITIAL_URI, uriToLoad);
 
         startActivityForResult(intent, CREATE_FILE);
     }
@@ -397,30 +394,36 @@ public class CreateNote extends AppCompatActivity {
                     try {
                         String mimetype = getContentResolver().getType(uri);
                         if(mimetype.equals("text/plain")){
+                            if(pdfViewer){
+                                mBinding.pdfView.setVisibility(View.GONE);
+                                mBinding.editTextBody.setVisibility(View.VISIBLE);
+                                mBinding.textView2.setVisibility(View.VISIBLE);
+
+                                pdfViewer = false;
+                            }
 
                             new_text = existing_text + "\n" + storageUtils.readTextFromUri(this, uri);
                         }
                         if(mimetype.equals("application/pdf")){
                             Log.d("path", uri.toString());
-                            new_text = existing_text + "\n" + storageUtils.readPdfFile(uri.toString(), existing_text);
-                        }
 
+                            mBinding.pdfView.fromUri(uri).load();
+                            mBinding.pdfView.setVisibility(View.VISIBLE);
+                            mBinding.editTextBody.setVisibility(View.GONE);
+                            mBinding.textView2.setVisibility(View.GONE);
+                            pdfViewer = true;
+                        }
                         mBinding.editTextBody.setText(new_text);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-
             }
-
            else if(requestCode == CREATE_FILE){
                 if(data != null){
                     uri = data.getData();
                         existing_text = mBinding.editTextBody.getText().toString();
                         storageUtils.writeFileContent(this, uri, existing_text);
-                        //                    storageUtils.setTextInStorage(getDir(getString(R.string.app_name), MODE_PRIVATE),
-//                            getApplicationContext(), setDate(mTimeStamp), getString(R.string.app_name),mBinding.editTextBody.getText().toString());
-
                 }
             }
         }
