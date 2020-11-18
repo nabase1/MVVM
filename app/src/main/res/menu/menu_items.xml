@@ -40,6 +40,10 @@
             <item android:id="@+id/item_text_to_speech"
                 android:title="Diary Reads"
                 app:showAsAction="never"/>
+
+            <item android:id="@+id/item_about"
+                android:title="@string/about"
+                app:showAsAction="never"/>
         </menu>
 
     </item>

@@ -2,6 +2,7 @@ package com.nabase1.mvvm;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
@@ -51,14 +52,17 @@ public class CreateNote extends AppCompatActivity {
     private MenuItem mTalking_item;
     private MenuItem mDone_talking_item;
     private boolean pdfViewer = false;
+    private boolean isSpeaking = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_create_note);
 
+        Toolbar toolbar = findViewById(R.id.mtoolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_baseline_close_24);
+        toolbar.setTitle("");
         mSharedPreferences = getSharedPreferences(TAG, MODE_PRIVATE);
-        Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_baseline_close_24);
 
         textToSpeech();
         speechToText();
@@ -71,7 +75,7 @@ public class CreateNote extends AppCompatActivity {
            defaultBackgroundColor = intent.getIntExtra(Constants.TEXT_PRIORITY, defaultBackgroundColor);
 //            defaultColor = ContextCompat.getColor(this, R.color.lite_blue);
             mTimeStamp = intent.getLongExtra(Constants.TIME_STAMP, Calendar.getInstance().getTimeInMillis());
-            setTitle(getString(R.string.update_diary));
+           // toolbar.setTitle(getString(R.string.update_diary));
            // mBinding.editTextTitle.setText(intent.getStringExtra(Constants.TEXT_TITLE));
             mBinding.editTextBody.setText(intent.getStringExtra(Constants.TEXT_DESCRIPTION));
             mBinding.textViewDate.setText(setDate(mTimeStamp));
@@ -79,7 +83,7 @@ public class CreateNote extends AppCompatActivity {
         }else {
             defaultBackgroundColor = mSharedPreferences.getInt(Constants.BACK_COLOR, R.color.white);
             defaultTextColor = mSharedPreferences.getInt(Constants.TEXT_COLOR, R.color.black_de);
-            setTitle(getString(R.string.create_new_diary));
+           // toolbar.setTitle(getString(R.string.create_new_diary));
             mTimeStamp = Calendar.getInstance().getTimeInMillis();
             mBinding.textViewDate.setText(setDate(mTimeStamp));
         }
@@ -89,7 +93,8 @@ public class CreateNote extends AppCompatActivity {
         mBinding.textView2.setTextColor(defaultTextColor);
         mBinding.textViewDate.setTextColor(defaultTextColor);
 
-
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
     }
 
     @Override
@@ -114,17 +119,11 @@ public class CreateNote extends AppCompatActivity {
         }
         if(id == R.id.item_save){
             if(pdfViewer){
-                mBinding.pdfView.setVisibility(View.GONE);
-                mBinding.editTextBody.setVisibility(View.VISIBLE);
-                mBinding.textView2.setVisibility(View.VISIBLE);
-
-                pdfViewer = false;
+                closePdfViewer();
             }else {
                 saveNote();
             }
-
         }
-
         if(id == R.id.item_back_color){
             backgroundColorPicker();
         }
@@ -136,36 +135,54 @@ public class CreateNote extends AppCompatActivity {
         if(id == R.id.item_speech_to_text){
             checkPermission();
             if(pdfViewer){
-                mBinding.pdfView.setVisibility(View.GONE);
-                mBinding.editTextBody.setVisibility(View.VISIBLE);
-                mBinding.textView2.setVisibility(View.VISIBLE);
-
-                pdfViewer = false;
-
+                closePdfViewer();
             }
+
                 mBinding.editTextBody.setHint("Diary is listening to you...");
                 mDroidSpeech.startDroidSpeechRecognition();
+                isSpeaking = true;
                 mTalking_item.setVisible(false);
                 mDone_talking_item.setVisible(true);
 
         }
 
         if(id == R.id.item_stop_speech_to_text){
-            mDroidSpeech.closeDroidSpeechOperations();
-            Toast.makeText(this, "Diary Stopped Listening", Toast.LENGTH_SHORT).show();
-            mTalking_item.setVisible(true);
-            mDone_talking_item.setVisible(false);
+            stopListening();
         }
 
         if(id == R.id.item_text_to_speech){
             mTextToSpeech.speak(mBinding.editTextBody.getText().toString(), TextToSpeech.QUEUE_FLUSH,null);
-            mTextToSpeech.speak(mBinding.pdfView.toString(), TextToSpeech.QUEUE_FLUSH, null);
+          //  mTextToSpeech.speak(mBinding.pdfView.toString(), TextToSpeech.QUEUE_FLUSH, null);
+        }
+        if(id == R.id.item_about){
+            if(isSpeaking){
+                stopListening();
+            }
+            startActivity(new Intent(this, About.class));
         }
         return true;
     }
 
+    private void stopListening(){
+        mDroidSpeech.closeDroidSpeechOperations();
+        isSpeaking = false;
+        Toast.makeText(this, "Diary Stopped Listening", Toast.LENGTH_SHORT).show();
+        mTalking_item.setVisible(true);
+        mDone_talking_item.setVisible(false);
+    }
+
+    private void closePdfViewer(){
+            mBinding.pdfView.setVisibility(View.GONE);
+            mBinding.editTextBody.setVisibility(View.VISIBLE);
+            mBinding.textView2.setVisibility(View.VISIBLE);
+
+            pdfViewer = false;
+    }
     private void saveNote(){
 
+        if(isSpeaking){
+           stopListening();
+        }
         String multiLines = mBinding.editTextBody.getText().toString();
         String[] diary;
         String delimiter = "\n";
@@ -196,9 +213,6 @@ public class CreateNote extends AppCompatActivity {
         setResult(RESULT_OK, data);
         finish();
     }
-
-    // Request code for selecting a PDF document.
-
 
     private void openFile() {
         String[] mimeTypes = {"text/plain", "application/pdf"};

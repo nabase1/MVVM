@@ -3,6 +3,7 @@ package com.nabase1.mvvm;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -12,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.nabase1.mvvm.adapters.NotesAdapter;
@@ -32,6 +35,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+        Toolbar toolbar = findViewById(R.id.mtoolbar);
+        toolbar.setTitle(getString(R.string.app_name));
+        setSupportActionBar(toolbar);
 
         /* initializing viewModel */
         mViewModel = new ViewModelProvider.AndroidViewModelFactory(getApplication()).create(ViewModel.class);
@@ -56,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                     mViewModel.delete(mNotesAdapter.getNoteAt(viewHolder.getAdapterPosition()));
-                Toast.makeText(MainActivity.this, "Note Deleted!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Diary Deleted!", Toast.LENGTH_SHORT).show();
             }
         }).attachToRecyclerView(mBinding.recyclerview);
 
@@ -99,6 +106,24 @@ public class MainActivity extends AppCompatActivity {
     /* delete all notes from localDb */
     private void deleteAllNotes(){
         mViewModel.deleteAll();
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.settings_items, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.item_about){
+            startActivity(new Intent(this, About.class));
+        }
+        return true;
     }
 
     @Override

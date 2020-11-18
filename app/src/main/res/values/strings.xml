@@ -4,4 +4,12 @@
     <string name="update_diary">Update Diary</string>
     <string name="title">Title</string>
     <string name="created">Created:</string>
+    <string name="dev_name">Bugase Nabase Razak</string>
+    <string name="dev_contact">+233 553 18 1665</string>
+    <string name="dev_email">nabase1.nr@gmail.com</string>
+    <string name="version_num">Version 1.0</string>
+    <string name="developer">Developer</string>
+    <string name="about">About</string>
+    <string name="back_up">Back Up</string>
+    <string name="main_menu">Main Menu</string>
 </resources>

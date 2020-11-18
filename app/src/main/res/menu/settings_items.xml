@@ -2,12 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/item_help"
-        app:showAsAction="never"
-        android:title="About"/>
+<item app:showAsAction="always"
+    android:title="@string/main_menu"
+    android:icon="@drawable/ic_baseline_more_vert_24">
 
-    <item android:id="@+id/item_backUp"
-        app:showAsAction="never"
-        android:title="Back Up"/>
-
+    <menu>
+        <item android:id="@+id/item_about"
+            app:showAsAction="never"
+            android:title="@string/about"/>
+    </menu>
+</item>
 </menu>
