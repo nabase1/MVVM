@@ -69,7 +69,8 @@ public class storageUtils {
                 w.flush();
                 fos.getFD().sync();
             } finally {
-                Toast.makeText(context, "saved" + context.getFilesDir(), Toast.LENGTH_LONG).show();
+                fos.close();
+                //Toast.makeText(context, "saved" + context.getFilesDir(), Toast.LENGTH_LONG).show();
             }
 
         } catch (IOException e) {
@@ -93,27 +94,4 @@ public class storageUtils {
         return stringBuilder.toString();
     }
 
-    public static void writeFileContent(Context context, Uri uri, String text)
-    {
-        try{
-            ParcelFileDescriptor pfd =
-                    context.getContentResolver().
-                            openFileDescriptor(uri, "w");
-
-            FileOutputStream fileOutputStream =
-                    new FileOutputStream(pfd.getFileDescriptor());
-
-            fileOutputStream.write(text.getBytes());
-            fileOutputStream.flush();
-            fileOutputStream.getFD().sync();
-
-            fileOutputStream.close();
-            pfd.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
 }

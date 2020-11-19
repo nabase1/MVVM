@@ -183,35 +183,36 @@ public class CreateNote extends AppCompatActivity {
         if(isSpeaking){
            stopListening();
         }
-        String multiLines = mBinding.editTextBody.getText().toString();
-        String[] diary;
-        String delimiter = "\n";
-        diary = multiLines.split(delimiter);
+            String multiLines = mBinding.editTextBody.getText().toString();
+            String[] diary;
+            String delimiter = "\n";
+            diary = multiLines.split(delimiter);
 
-        String title = diary[0];
+            String title = diary[0];
 
-        String desc = mBinding.editTextBody.getText().toString();
+            String desc = mBinding.editTextBody.getText().toString();
 
-        Intent data = new Intent(this, MainActivity.class);
+            Intent data = new Intent(this, MainActivity.class);
 
-        data.putExtra(Constants.TEXT_TITLE, title);
-        data.putExtra(Constants.TEXT_DESCRIPTION,desc);
-        data.putExtra(Constants.TIME_STAMP, Calendar.getInstance().getTimeInMillis());
-        data.putExtra(Constants.TEXT_PRIORITY, defaultBackgroundColor);
+            data.putExtra(Constants.TEXT_TITLE, title);
+            data.putExtra(Constants.TEXT_DESCRIPTION,desc);
+            data.putExtra(Constants.TIME_STAMP, Calendar.getInstance().getTimeInMillis());
+            data.putExtra(Constants.TEXT_PRIORITY, defaultBackgroundColor);
 
-        int id = getIntent().getIntExtra(Constants.EXTRA_ID, -1);
+            int id = getIntent().getIntExtra(Constants.EXTRA_ID, -1);
 
-        if(id != -1){
-            long timestamp = getIntent().getLongExtra(Constants.TIME_STAMP, Calendar.getInstance().getTimeInMillis());
+            if(id != -1){
+                long timestamp = getIntent().getLongExtra(Constants.TIME_STAMP, Calendar.getInstance().getTimeInMillis());
 
-            data.putExtra(Constants.EXTRA_ID, id);
-            data.putExtra(Constants.TIME_STAMP, timestamp);
-        }
+                data.putExtra(Constants.EXTRA_ID, id);
+                data.putExtra(Constants.TIME_STAMP, timestamp);
+            }
 
-        // createFile();
-        //writeToFile();
-        setResult(RESULT_OK, data);
-        finish();
+            writeToFile();
+            setResult(RESULT_OK, data);
+            finish();
+
+
     }
 
     private void openFile() {
@@ -225,25 +226,15 @@ public class CreateNote extends AppCompatActivity {
         startActivityForResult(intent, OPEN_FILE);
     }
 
-
-    private void createFile() {
-        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TITLE, setDate(mTimeStamp));
-
-        startActivityForResult(intent, CREATE_FILE);
-    }
-
     private void writeToFile(){
         if(storageUtils.isExternalStorageWritable()){
             storageUtils.setTextInStorage(Environment.getExternalStorageDirectory(),
-                    this, setDate(mTimeStamp), getString(R.string.app_name), mBinding.editTextBody.getText().toString());
+                    this, setDate(mTimeStamp)+".txt", getString(R.string.app_name), mBinding.editTextBody.getText().toString());
 
         }else {
             Toast.makeText(this, "internal Storage", Toast.LENGTH_SHORT).show();
             storageUtils.setTextInStorage(getDir(getString(R.string.app_name), MODE_PRIVATE),
-                    getApplicationContext(), setDate(mTimeStamp), getString(R.string.app_name),mBinding.editTextBody.getText().toString());
+                    getApplicationContext(), setDate(mTimeStamp)+".txt", getString(R.string.app_name),mBinding.editTextBody.getText().toString());
         }
     }
 
@@ -431,13 +422,6 @@ public class CreateNote extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                }
-            }
-           else if(requestCode == CREATE_FILE){
-                if(data != null){
-                    uri = data.getData();
-                        existing_text = mBinding.editTextBody.getText().toString();
-                        storageUtils.writeFileContent(this, uri, existing_text);
                 }
             }
         }

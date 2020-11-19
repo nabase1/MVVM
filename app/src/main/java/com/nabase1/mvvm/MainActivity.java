@@ -134,17 +134,19 @@ public class MainActivity extends AppCompatActivity {
 
         if(requestCode == Constants.ADD_NOTE_REQUEST_CODE && resultCode == RESULT_OK){
                     String title = data.getStringExtra(Constants.TEXT_TITLE);
-                    String desc = data.getStringExtra(Constants.TEXT_DESCRIPTION);
-                    long timestamp = data.getLongExtra(Constants.TIME_STAMP, Calendar.getInstance().getTimeInMillis());
-                    int priority = data.getIntExtra(Constants.TEXT_PRIORITY, 1);
+                    if(!title.isEmpty()){
+                        String desc = data.getStringExtra(Constants.TEXT_DESCRIPTION);
+                        long timestamp = data.getLongExtra(Constants.TIME_STAMP, Calendar.getInstance().getTimeInMillis());
+                        int priority = data.getIntExtra(Constants.TEXT_PRIORITY, 1);
 
-                    Notes notes = new Notes(title,desc,timestamp,priority);
-                    mViewModel.insert(notes);
+                        Notes notes = new Notes(title,desc,timestamp,priority);
+                        mViewModel.insert(notes);
 
-            Toast.makeText(this, "Saved Successfully!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Saved Successfully!", Toast.LENGTH_SHORT).show();
+                    }
+
 
         }else if(requestCode == Constants.EDIT_NOTE_REQUEST_CODE && resultCode == RESULT_OK){
-
 
             int id = data.getIntExtra(Constants.EXTRA_ID, -1);
             Log.d(TAG, "title"+ data.getStringExtra(Constants.TEXT_TITLE));
