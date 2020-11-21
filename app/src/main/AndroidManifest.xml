@@ -16,11 +16,29 @@
         <activity android:name=".WelcomeScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="file"/>
+                <data android:mimeType="text/plain"/>
             </intent-filter>
         </activity>
-        <activity android:name=".CreateNote" />
+        <activity android:name=".CreateNote" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" android:host="*"
+                    android:pathPattern=".*\\.txt" />
+                <data android:scheme="https" android:host="*"
+                    android:pathPattern=".*\\.pdf" />
+                <data android:scheme="content" android:host="*"
+                    android:pathPattern=".*\\.pdf" />
+                <data android:scheme="file" android:host="*"
+                    android:pathPattern=".*\\.pdf" />
+                <data android:mimeType="application/pdf"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".About" />
         <activity
             android:name=".MainActivity"

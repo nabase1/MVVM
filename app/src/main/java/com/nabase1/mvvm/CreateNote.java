@@ -95,6 +95,8 @@ public class CreateNote extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
+
+        getPath();
     }
 
     @Override
@@ -208,7 +210,10 @@ public class CreateNote extends AppCompatActivity {
                 data.putExtra(Constants.TIME_STAMP, timestamp);
             }
 
-            writeToFile();
+            if(!multiLines.isEmpty()){
+                writeToFile();
+            }
+
             setResult(RESULT_OK, data);
             finish();
 
@@ -386,42 +391,54 @@ public class CreateNote extends AppCompatActivity {
 
     }
 
+
+    private void getPath(){
+        Uri uri = getIntent().getData();
+        if(uri != null){
+            getFileType(uri);
+        }
+    }
+
+    private void getFileType(Uri uri){
+        String existing_text =  mBinding.editTextBody.getText().toString();
+        String new_text = "";
+        try {
+            String mimetype = getContentResolver().getType(uri);
+            if(mimetype.equals("text/plain")){
+                if(pdfViewer){
+                    mBinding.pdfView.setVisibility(View.GONE);
+                    mBinding.editTextBody.setVisibility(View.VISIBLE);
+                    mBinding.textView2.setVisibility(View.VISIBLE);
+
+                    pdfViewer = false;
+                }
+
+                new_text = existing_text + "\n" + storageUtils.readTextFromUri(this, uri);
+            }
+            if(mimetype.equals("application/pdf")){
+                Log.d("path", uri.toString());
+
+                mBinding.pdfView.fromUri(uri).load();
+                mBinding.pdfView.setVisibility(View.VISIBLE);
+                mBinding.editTextBody.setVisibility(View.GONE);
+                mBinding.textView2.setVisibility(View.GONE);
+                pdfViewer = true;
+            }
+            mBinding.editTextBody.setText(new_text);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK){
             Uri uri = null;
-            String existing_text =  mBinding.editTextBody.getText().toString();
-            String new_text = "";
             if(requestCode == OPEN_FILE){
                 if(data != null){
                     uri = data.getData();
-                    try {
-                        String mimetype = getContentResolver().getType(uri);
-                        if(mimetype.equals("text/plain")){
-                            if(pdfViewer){
-                                mBinding.pdfView.setVisibility(View.GONE);
-                                mBinding.editTextBody.setVisibility(View.VISIBLE);
-                                mBinding.textView2.setVisibility(View.VISIBLE);
-
-                                pdfViewer = false;
-                            }
-
-                            new_text = existing_text + "\n" + storageUtils.readTextFromUri(this, uri);
-                        }
-                        if(mimetype.equals("application/pdf")){
-                            Log.d("path", uri.toString());
-
-                            mBinding.pdfView.fromUri(uri).load();
-                            mBinding.pdfView.setVisibility(View.VISIBLE);
-                            mBinding.editTextBody.setVisibility(View.GONE);
-                            mBinding.textView2.setVisibility(View.GONE);
-                            pdfViewer = true;
-                        }
-                        mBinding.editTextBody.setText(new_text);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                     getFileType(uri);
                 }
             }
         }
