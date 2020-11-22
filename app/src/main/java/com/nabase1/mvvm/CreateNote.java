@@ -262,8 +262,8 @@ public class CreateNote extends AppCompatActivity {
         colors.add("#3a19e1");
         colors.add("#daed0c");
         colors.add("#0cedd5");
-        colors.add("#0ced17");
-        colors.add("#033206");
+        colors.add("#e2c38c");
+        colors.add("#2b1311");
         colors.add("#ce3006");
         colors.add("#bd05a1");
 
@@ -296,8 +296,8 @@ public class CreateNote extends AppCompatActivity {
         colors.add("#3a19e1");
         colors.add("#daed0c");
         colors.add("#0cedd5");
-        colors.add("#0ced17");
-        colors.add("#033206");
+        colors.add("#e2c38c");
+        colors.add("#2b1311");
         colors.add("#ce3006");
         colors.add("#bd05a1");
 
