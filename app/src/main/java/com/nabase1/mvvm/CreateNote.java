@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.nabase1.mvvm.databinding.ActivityCreateNoteBinding;
 import com.vikramezhil.droidspeech.DroidSpeech;
 import com.vikramezhil.droidspeech.OnDSListener;
@@ -53,6 +54,7 @@ public class CreateNote extends AppCompatActivity {
     private MenuItem mDone_talking_item;
     private boolean pdfViewer = false;
     private boolean isSpeaking = false;
+    private Uri mUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +96,9 @@ public class CreateNote extends AppCompatActivity {
         mBinding.textViewDate.setTextColor(defaultTextColor);
 
         setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        toolbar.setNavigationOnClickListener(v ->{ if(isSpeaking){
+                                    mDroidSpeech.closeDroidSpeechOperations();}
+                                    onBackPressed(); } );
 
         getPath();
     }
@@ -154,6 +158,9 @@ public class CreateNote extends AppCompatActivity {
 
         if(id == R.id.item_text_to_speech){
             mTextToSpeech.speak(mBinding.editTextBody.getText().toString(), TextToSpeech.QUEUE_FLUSH,null);
+            if(pdfViewer){
+                Snackbar.make(mBinding.pdfView, "Cant Read Pdf", Snackbar.LENGTH_LONG).show();
+            }
           //  mTextToSpeech.speak(mBinding.pdfView.toString(), TextToSpeech.QUEUE_FLUSH, null);
         }
         if(id == R.id.item_about){
@@ -214,7 +221,10 @@ public class CreateNote extends AppCompatActivity {
                 writeToFile();
             }
 
-            setResult(RESULT_OK, data);
+            if(mUri != null){
+                startActivityForResult(data, Constants.ADD_NOTE_REQUEST_CODE);
+            }
+             setResult(RESULT_OK, data);
             finish();
 
 
@@ -393,9 +403,9 @@ public class CreateNote extends AppCompatActivity {
 
 
     private void getPath(){
-        Uri uri = getIntent().getData();
-        if(uri != null){
-            getFileType(uri);
+        mUri = getIntent().getData();
+        if(mUri != null){
+            getFileType(mUri);
         }
     }
 

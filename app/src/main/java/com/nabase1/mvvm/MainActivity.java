@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -11,18 +12,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.nabase1.mvvm.adapters.NotesAdapter;
 import com.nabase1.mvvm.databinding.ActivityMainBinding;
 import com.nabase1.mvvm.room.Notes;
 import com.nabase1.mvvm.viewModel.ViewModel;
 
 import java.util.Calendar;
+
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -63,9 +68,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                     mViewModel.delete(mNotesAdapter.getNoteAt(viewHolder.getAdapterPosition()));
-                Toast.makeText(MainActivity.this, "Diary Deleted!", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(mBinding.recyclerview, R.string.diary_deleted, Snackbar.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView,
+                                    @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                        .addBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.color4))
+                        .addActionIcon(R.drawable.ic_baseline_delete_forever_24)
+                        .create()
+                        .decorate();
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
         }).attachToRecyclerView(mBinding.recyclerview);
+
 
         /*  */
         mNotesAdapter.setOnclickListener(notes -> {
@@ -80,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, Constants.EDIT_NOTE_REQUEST_CODE);
         });
     }
+
 
     /* initialize recyclerView */
     private void initialize(RecyclerView recyclerView){
@@ -131,8 +152,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
-
         if(requestCode == Constants.ADD_NOTE_REQUEST_CODE && resultCode == RESULT_OK){
                     String title = data.getStringExtra(Constants.TEXT_TITLE);
                     if(!title.isEmpty()){
@@ -143,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                         Notes notes = new Notes(title,desc,timestamp,priority);
                         mViewModel.insert(notes);
 
-                        Toast.makeText(this, "Saved Successfully!", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(mBinding.recyclerview, R.string.success_msg, Snackbar.LENGTH_LONG).show();
                     }
 
 
@@ -163,9 +182,9 @@ public class MainActivity extends AppCompatActivity {
                 Notes notes = new Notes(title,desc,timestamp,priority);
                 notes.setId(id);
                 mViewModel.update(notes);
-                Toast.makeText(this, "Updated!", Toast.LENGTH_SHORT).show();
+               Snackbar.make(mBinding.recyclerview, R.string.diary_updated, Snackbar.LENGTH_LONG).show();
             }else {
-                Toast.makeText(this, "Problem Updating", Toast.LENGTH_SHORT).show();
+                Snackbar.make(mBinding.recyclerview, R.string.error_msg, Snackbar.LENGTH_LONG).show();
             }
         }
     }

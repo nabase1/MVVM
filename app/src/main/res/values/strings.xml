@@ -12,4 +12,8 @@
     <string name="about">About</string>
     <string name="back_up">Back Up</string>
     <string name="main_menu">Main Menu</string>
+    <string name="diary_deleted">Diary Deleted!</string>
+    <string name="success_msg">Saved Successfully!</string>
+    <string name="diary_updated">Diary Updated!</string>
+    <string name="error_msg">Problem Updating</string>
 </resources>
