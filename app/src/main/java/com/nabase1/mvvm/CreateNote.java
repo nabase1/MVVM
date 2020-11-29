@@ -34,11 +34,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import petrov.kristiyan.colorpicker.ColorPicker;
-
-import static com.nabase1.mvvm.Constants.CREATE_FILE;
 import static com.nabase1.mvvm.Constants.OPEN_FILE;
 
 public class CreateNote extends AppCompatActivity {
@@ -144,7 +141,7 @@ public class CreateNote extends AppCompatActivity {
                 closePdfViewer();
             }
 
-                mBinding.editTextBody.setHint("Diary is listening to you...");
+                mBinding.editTextBody.setHint(R.string.listen_msg);
                 mDroidSpeech.startDroidSpeechRecognition();
                 isSpeaking = true;
                 mTalking_item.setVisible(false);
@@ -157,11 +154,10 @@ public class CreateNote extends AppCompatActivity {
         }
 
         if(id == R.id.item_text_to_speech){
-            mTextToSpeech.speak(mBinding.editTextBody.getText().toString(), TextToSpeech.QUEUE_FLUSH,null);
             if(pdfViewer){
-                Snackbar.make(mBinding.pdfView, "Cant Read Pdf", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(mBinding.pdfView, R.string.read_error, Snackbar.LENGTH_LONG).show();
             }
-          //  mTextToSpeech.speak(mBinding.pdfView.toString(), TextToSpeech.QUEUE_FLUSH, null);
+            mTextToSpeech.speak(mBinding.editTextBody.getText().toString(), TextToSpeech.QUEUE_FLUSH,null);
         }
         if(id == R.id.item_about){
             if(isSpeaking){
@@ -175,7 +171,7 @@ public class CreateNote extends AppCompatActivity {
     private void stopListening(){
         mDroidSpeech.closeDroidSpeechOperations();
         isSpeaking = false;
-        Toast.makeText(this, "Diary Stopped Listening", Toast.LENGTH_SHORT).show();
+        Snackbar.make(mBinding.textView2, R.string.diary_stopped, Snackbar.LENGTH_LONG);
         mTalking_item.setVisible(true);
         mDone_talking_item.setVisible(false);
     }

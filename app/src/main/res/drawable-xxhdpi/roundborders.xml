@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!---
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <corners android:radius="70dp" />
+    <item android:drawable="@drawable/uew_logo_web"/>
+
+    <solid android:color="#ffffff"/>
+</shape>
+-->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item >
+        <shape xmlns:android="http://schemas.android.com/apk/res/android">
+            <corners android:radius="70dp" />
+            <solid android:color="#dcc18a"/>
+
+        </shape>
+
+    </item>
+</selector>

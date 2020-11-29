@@ -16,4 +16,9 @@
     <string name="success_msg">Saved Successfully!</string>
     <string name="diary_updated">Diary Updated!</string>
     <string name="error_msg">Problem Updating</string>
+    <string name="read_error">Cant Read Pdf</string>
+    <string name="listen_msg">Diary is listening to you...</string>
+    <string name="diary_stopped">Diary Stopped Listening</string>
+    <string name="secure_your_diary_with_four_digit_pin">Secure Your Diary With Four Digit Pin</string>
+    <string name="enter_four_digit_pin">Enter Four Digit Pin</string>
 </resources>

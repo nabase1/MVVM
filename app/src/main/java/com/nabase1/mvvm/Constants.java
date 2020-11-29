@@ -13,5 +13,6 @@ public class Constants {
     public static final int OPEN_FILE = 5;
     public static final String BACK_COLOR = "BACK COLOR";
     public static final String TEXT_COLOR = "TEXT_COLOR";
+    public static final String SHARED_REFERENCE = "SHARED_REFERENCE";
 
 }
