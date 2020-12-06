@@ -15,7 +15,7 @@ public class WelcomeScreen extends AppCompatActivity {
         setContentView(R.layout.activity_welcome_screen);
 
         new Handler().postDelayed(() -> {
-            Intent mapIntent = new Intent(WelcomeScreen.this, MainActivity.class);
+            Intent mapIntent = new Intent(WelcomeScreen.this, LockScreen.class);
             startActivity(mapIntent);
             finish();
         },splash_time);
