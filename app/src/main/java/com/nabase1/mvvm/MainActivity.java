@@ -29,6 +29,8 @@ import java.util.Calendar;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
+import static com.nabase1.mvvm.Constants.*;
+
 public class MainActivity extends AppCompatActivity {
 
     private ViewModel mViewModel;
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
 
         initialize(mBinding.recyclerview);
         mBinding.floatingActionButton.setOnClickListener(view -> {
-                startActivityForResult(new Intent(this, CreateNote.class), Constants.ADD_NOTE_REQUEST_CODE);
+                startActivityForResult(new Intent(this, CreateNote.class), ADD_NOTE_REQUEST_CODE);
         });
 
 
@@ -91,13 +93,13 @@ public class MainActivity extends AppCompatActivity {
         mNotesAdapter.setOnclickListener(notes -> {
             Intent intent = new Intent(this, CreateNote.class);
 
-            intent.putExtra(Constants.EXTRA_ID, notes.getId());
-            intent.putExtra(Constants.TEXT_TITLE, notes.getTitle());
-            intent.putExtra(Constants.TEXT_DESCRIPTION, notes.getDescription());
-            intent.putExtra(Constants.TIME_STAMP, notes.getTimeStamp());
-            intent.putExtra(Constants.TEXT_PRIORITY, notes.getBackgroundColor());
+            intent.putExtra(EXTRA_ID, notes.getId());
+            intent.putExtra(TEXT_TITLE, notes.getTitle());
+            intent.putExtra(TEXT_DESCRIPTION, notes.getDescription());
+            intent.putExtra(TIME_STAMP, notes.getTimeStamp());
+            intent.putExtra(TEXT_PRIORITY, notes.getBackgroundColor());
 
-            startActivityForResult(intent, Constants.EDIT_NOTE_REQUEST_CODE);
+            startActivityForResult(intent, EDIT_NOTE_REQUEST_CODE);
         });
     }
 
@@ -145,6 +147,11 @@ public class MainActivity extends AppCompatActivity {
         if(id == R.id.item_about){
             startActivity(new Intent(this, About.class));
         }
+        if(id == R.id.item_change_pin){
+            Intent lockScreenIntent = new Intent(this, LockScreen.class);
+            lockScreenIntent.putExtra(CHANGE_PIN, 1);
+            startActivity(lockScreenIntent);
+        }
         return true;
     }
 
@@ -152,12 +159,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == Constants.ADD_NOTE_REQUEST_CODE && resultCode == RESULT_OK){
-                    String title = data.getStringExtra(Constants.TEXT_TITLE);
+        if(requestCode == ADD_NOTE_REQUEST_CODE && resultCode == RESULT_OK){
+                    String title = data.getStringExtra(TEXT_TITLE);
                     if(!title.isEmpty()){
-                        String desc = data.getStringExtra(Constants.TEXT_DESCRIPTION);
-                        long timestamp = data.getLongExtra(Constants.TIME_STAMP, Calendar.getInstance().getTimeInMillis());
-                        int priority = data.getIntExtra(Constants.TEXT_PRIORITY, 1);
+                        String desc = data.getStringExtra(TEXT_DESCRIPTION);
+                        long timestamp = data.getLongExtra(TIME_STAMP, Calendar.getInstance().getTimeInMillis());
+                        int priority = data.getIntExtra(TEXT_PRIORITY, 1);
 
                         Notes notes = new Notes(title,desc,timestamp,priority);
                         mViewModel.insert(notes);
@@ -166,18 +173,18 @@ public class MainActivity extends AppCompatActivity {
                     }
 
 
-        }else if(requestCode == Constants.EDIT_NOTE_REQUEST_CODE && resultCode == RESULT_OK){
+        }else if(requestCode == EDIT_NOTE_REQUEST_CODE && resultCode == RESULT_OK){
 
-            int id = data.getIntExtra(Constants.EXTRA_ID, -1);
-            Log.d(TAG, "title"+ data.getStringExtra(Constants.TEXT_TITLE));
-            Log.d(TAG, "desc" + data.getStringExtra(Constants.TEXT_DESCRIPTION));
+            int id = data.getIntExtra(EXTRA_ID, -1);
+            Log.d(TAG, "title"+ data.getStringExtra(TEXT_TITLE));
+            Log.d(TAG, "desc" + data.getStringExtra(TEXT_DESCRIPTION));
             Log.d(TAG, "id" + id);
 
             if(id != -1){
-                String title = data.getStringExtra(Constants.TEXT_TITLE);
-                String desc = data.getStringExtra(Constants.TEXT_DESCRIPTION);
-                long timestamp = data.getLongExtra(Constants.TIME_STAMP, Calendar.getInstance().getTimeInMillis());
-                int priority = data.getIntExtra(Constants.TEXT_PRIORITY, 1);
+                String title = data.getStringExtra(TEXT_TITLE);
+                String desc = data.getStringExtra(TEXT_DESCRIPTION);
+                long timestamp = data.getLongExtra(TIME_STAMP, Calendar.getInstance().getTimeInMillis());
+                int priority = data.getIntExtra(TEXT_PRIORITY, 1);
 
                 Notes notes = new Notes(title,desc,timestamp,priority);
                 notes.setId(id);

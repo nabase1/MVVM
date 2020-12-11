@@ -19,8 +19,9 @@ public class LockScreen extends AppCompatActivity {
 
     ActivityLockScreenBinding mBinding;
     TextWatcher mTextWatcher;
-    String mPin,entered_pin;
+    String mPin,entered_pin, first_pin;
     Boolean mConfirm = false;
+    private int mChange_pin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,28 +39,22 @@ public class LockScreen extends AppCompatActivity {
 
                      entered_pin = mBinding.editTextPin.getText().toString();
                      if(mPin == null){
-                         if(entered_pin.isEmpty()){
-                             mBinding.textView.setText(getString(R.string.secure_your_diary_with_four_digit_pin));
-                             mBinding.buttonNext.setVisibility(View.GONE);
-                         }
-                         else {
-                             mBinding.textView.setText(R.string.at_least_4_digit);
-                             if(s.length() >= 4){
-                                 mBinding.buttonNext.setVisibility(View.VISIBLE);
-                             }
-                             else {
-                                 mBinding.buttonNext.setVisibility(View.GONE);
-                             }
-
-                         }
+                            setPin();
                      }else {
-                         if(entered_pin.equals(mPin)){
-                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                             finish();
+                         if(mChange_pin == 1){
+                             setPin();
+                         }else {
+                             if(entered_pin.equals(mPin)){
+                                 if(mChange_pin == 0){
+                                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                 }
+                                 finish();
+                             }
+                             if(s.length() >= 4 && !entered_pin.equals(mPin)){
+                                 Toast.makeText(LockScreen.this, R.string.incorrect_pin, Toast.LENGTH_LONG).show();
+                             }
                          }
-                         if(s.length() >= 4 && !entered_pin.equals(mPin)){
-                             Toast.makeText(LockScreen.this, R.string.incorrect_pin, Toast.LENGTH_LONG).show();
-                         }
+
                      }
 
             }
@@ -73,25 +68,62 @@ public class LockScreen extends AppCompatActivity {
 
         mBinding.buttonNext.setOnClickListener(v -> {
             if(!mConfirm){
-                MySharedReference.getInstance(getApplicationContext()).saveData(SAVE_PIN_CODE, entered_pin);
+                first_pin = mBinding.editTextPin.getText().toString();
                 mBinding.editTextPin.setText("");
                 mBinding.textView.setText(R.string.confirm_pin);
                 mBinding.buttonNext.setText(R.string.done);
+                mBinding.buttonCancel.setVisibility(View.VISIBLE);
                 mConfirm = true;
             }
             if(mConfirm){
-                String confirm_pin = MySharedReference.getInstance(getApplicationContext()).getData(SAVE_PIN_CODE);
-                if(entered_pin.equals(confirm_pin)){
+                if(entered_pin.equals(first_pin)){
+                    MySharedReference.getInstance(getApplicationContext()).saveData(SAVE_PIN_CODE, entered_pin);
                     startActivity(new Intent(this, MainActivity.class));
+                    finish();
+                }
+                else {
+                    mBinding.textView.setText(R.string.mismatch_error);
                 }
             }
 
         });
+
+        mBinding.buttonCancel.setOnClickListener(v -> {
+            mBinding.editTextPin.setText("");
+            mBinding.textView.setText(R.string.secure_your_diary_with_four_digit_pin);
+            mBinding.buttonCancel.setVisibility(View.GONE);
+            mBinding.buttonNext.setText(R.string.next);
+            mConfirm = false;
+        });
+    }
+
+    private void setPin(){
+        CharSequence s = mBinding.editTextPin.getText().toString();
+        if(entered_pin.isEmpty()){
+            if(mConfirm){
+                mBinding.textView.setText(R.string.confirm_pin);
+                mBinding.buttonNext.setText(R.string.done);
+            }else{
+                mBinding.textView.setText(getString(R.string.secure_your_diary_with_four_digit_pin));
+                mBinding.buttonNext.setVisibility(View.GONE);
+            }
+        }
+        else {
+            mBinding.textView.setText(R.string.at_least_4_digit);
+            if(s.length() >= 4){
+                mBinding.buttonNext.setVisibility(View.VISIBLE);
+            }
+            else {
+                mBinding.buttonNext.setVisibility(View.GONE);
+            }
+        }
     }
 
 
     @Override
     protected void onStart() {
+        Intent intent = getIntent();
+        mChange_pin = intent.getIntExtra(Constants.CHANGE_PIN, 0);
         mPin = MySharedReference.getInstance(getApplicationContext()).getData(SAVE_PIN_CODE);
         if(mPin == null){
             mBinding.textView.setText(getString(R.string.secure_your_diary_with_four_digit_pin));

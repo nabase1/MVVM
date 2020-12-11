@@ -16,5 +16,6 @@ public class Constants {
     public static final String SHARED_REFERENCE = "SHARED_REFERENCE";
     public static final String SAVE_PIN_CODE = "SAVE_PIN_CODE";
     public static final String GET_PIN_CODE = "GET_PIN_CODE";
+    public static final String CHANGE_PIN = "CHANGE_PIN";
 
 }

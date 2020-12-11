@@ -26,4 +26,8 @@
     <string name="confirm_pin">Re Enter Pin</string>
     <string name="done">Done</string>
     <string name="incorrect_pin">Incorrect Pin!</string>
+    <string name="change_pin">Change Pin</string>
+    <string name="mismatch_error">PIN do not match!, Re Enter</string>
+    <string name="next">Next</string>
+    <string name="back">Back</string>
 </resources>

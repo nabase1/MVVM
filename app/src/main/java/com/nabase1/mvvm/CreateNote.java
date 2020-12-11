@@ -253,7 +253,7 @@ public class CreateNote extends AppCompatActivity {
 
     public String setDate(Long timeStamp){
         Date date=new Date(timeStamp);
-        SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-YYYY  HH:mm:ss");
+        SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy  HH:mm:ss");
         sfd.format(date);
 
         return date.toString();
