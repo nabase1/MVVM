@@ -21,7 +21,7 @@ public class LockScreen extends AppCompatActivity {
     TextWatcher mTextWatcher;
     String mPin,entered_pin, first_pin;
     Boolean mConfirm = false;
-    private int mChange_pin;
+    private int mChange_pin, mLog_in;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,8 @@ public class LockScreen extends AppCompatActivity {
                              setPin();
                          }else {
                              if(entered_pin.equals(mPin)){
-                                 if(mChange_pin == 0){
+                                 MySharedReference.getInstance(getApplicationContext()).saveData(Constants.LOG_IN_CODE,"1");
+                                 if(mLog_in == 2){
                                      startActivity(new Intent(getApplicationContext(), MainActivity.class));
                                  }
                                  finish();
@@ -78,7 +79,9 @@ public class LockScreen extends AppCompatActivity {
             if(mConfirm){
                 if(entered_pin.equals(first_pin)){
                     MySharedReference.getInstance(getApplicationContext()).saveData(SAVE_PIN_CODE, entered_pin);
-                    startActivity(new Intent(this, MainActivity.class));
+                    if(mChange_pin != 1){
+                        startActivity(new Intent(this, MainActivity.class));
+                    }
                     finish();
                 }
                 else {
@@ -123,7 +126,8 @@ public class LockScreen extends AppCompatActivity {
     @Override
     protected void onStart() {
         Intent intent = getIntent();
-        mChange_pin = intent.getIntExtra(Constants.CHANGE_PIN, 0);
+        mChange_pin = intent.getIntExtra(Constants.CHANGE_PIN, 2);
+        mLog_in = intent.getIntExtra(Constants.LOG_IN, 2);
         mPin = MySharedReference.getInstance(getApplicationContext()).getData(SAVE_PIN_CODE);
         if(mPin == null){
             mBinding.textView.setText(getString(R.string.secure_your_diary_with_four_digit_pin));

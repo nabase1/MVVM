@@ -36,6 +36,9 @@ import java.util.List;
 import java.util.Locale;
 
 import petrov.kristiyan.colorpicker.ColorPicker;
+
+import static com.nabase1.mvvm.Constants.LOG_IN;
+import static com.nabase1.mvvm.Constants.LOG_IN_CODE;
 import static com.nabase1.mvvm.Constants.OPEN_FILE;
 
 public class CreateNote extends AppCompatActivity {
@@ -97,7 +100,18 @@ public class CreateNote extends AppCompatActivity {
                                     mDroidSpeech.closeDroidSpeechOperations();}
                                     onBackPressed(); } );
 
+
+    }
+
+    @Override
+    protected void onStart() {
         getPath();
+        if(MySharedReference.getInstance(getApplicationContext()).getData(LOG_IN_CODE) == null){
+            Intent intent = new Intent(this, LockScreen.class);
+            intent.putExtra(LOG_IN, 1);
+            startActivity(intent);
+        }
+        super.onStart();
     }
 
     @Override

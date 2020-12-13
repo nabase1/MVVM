@@ -103,6 +103,21 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStart() {
+        if(MySharedReference.getInstance(getApplicationContext()).getData(LOG_IN_CODE) == null){
+            Intent intent = new Intent(this, LockScreen.class);
+            intent.putExtra(LOG_IN, 1);
+            startActivity(intent);
+        }
+        super.onStart();
+    }
+
+    @Override
+    public void onBackPressed() {
+        MySharedReference.getInstance(getApplicationContext()).saveData(LOG_IN_CODE, null);
+        super.onBackPressed();
+    }
 
     /* initialize recyclerView */
     private void initialize(RecyclerView recyclerView){
@@ -176,9 +191,6 @@ public class MainActivity extends AppCompatActivity {
         }else if(requestCode == EDIT_NOTE_REQUEST_CODE && resultCode == RESULT_OK){
 
             int id = data.getIntExtra(EXTRA_ID, -1);
-            Log.d(TAG, "title"+ data.getStringExtra(TEXT_TITLE));
-            Log.d(TAG, "desc" + data.getStringExtra(TEXT_DESCRIPTION));
-            Log.d(TAG, "id" + id);
 
             if(id != -1){
                 String title = data.getStringExtra(TEXT_TITLE);
@@ -188,8 +200,18 @@ public class MainActivity extends AppCompatActivity {
 
                 Notes notes = new Notes(title,desc,timestamp,priority);
                 notes.setId(id);
-                mViewModel.update(notes);
-               Snackbar.make(mBinding.recyclerview, R.string.diary_updated, Snackbar.LENGTH_LONG).show();
+
+                if(title.isEmpty() && desc.isEmpty()){
+                    mViewModel.delete(notes);
+                    Snackbar.make(mBinding.recyclerview, R.string.diary_deleted, Snackbar.LENGTH_LONG).show();
+
+                }else {
+                    mViewModel.update(notes);
+                    Snackbar.make(mBinding.recyclerview, R.string.diary_updated, Snackbar.LENGTH_LONG).show();
+                }
+
+
+
             }else {
                 Snackbar.make(mBinding.recyclerview, R.string.error_msg, Snackbar.LENGTH_LONG).show();
             }
