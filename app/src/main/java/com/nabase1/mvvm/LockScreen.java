@@ -51,7 +51,7 @@ public class LockScreen extends AppCompatActivity {
                                  }
                                  finish();
                              }
-                             if(s.length() >= 4 && !entered_pin.equals(mPin)){
+                             if(s.length() >= mPin.length() && !entered_pin.equals(mPin)){
                                  Toast.makeText(LockScreen.this, R.string.incorrect_pin, Toast.LENGTH_LONG).show();
                              }
                          }
@@ -76,7 +76,7 @@ public class LockScreen extends AppCompatActivity {
                 mBinding.buttonCancel.setVisibility(View.VISIBLE);
                 mConfirm = true;
             }
-            if(mConfirm){
+            else {
                 if(entered_pin.equals(first_pin)){
                     MySharedReference.getInstance(getApplicationContext()).saveData(SAVE_PIN_CODE, entered_pin);
                     if(mChange_pin != 1){

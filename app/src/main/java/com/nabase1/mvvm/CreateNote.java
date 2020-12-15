@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -75,17 +76,13 @@ public class CreateNote extends AppCompatActivity {
             defaultBackgroundColor = mSharedPreferences.getInt(Constants.BACK_COLOR, R.color.white);
             defaultTextColor = mSharedPreferences.getInt(Constants.TEXT_COLOR, R.color.black_de);
            defaultBackgroundColor = intent.getIntExtra(Constants.TEXT_PRIORITY, defaultBackgroundColor);
-//            defaultColor = ContextCompat.getColor(this, R.color.lite_blue);
             mTimeStamp = intent.getLongExtra(Constants.TIME_STAMP, Calendar.getInstance().getTimeInMillis());
-           // toolbar.setTitle(getString(R.string.update_diary));
-           // mBinding.editTextTitle.setText(intent.getStringExtra(Constants.TEXT_TITLE));
             mBinding.editTextBody.setText(intent.getStringExtra(Constants.TEXT_DESCRIPTION));
             mBinding.textViewDate.setText(setDate(mTimeStamp));
 
         }else {
             defaultBackgroundColor = mSharedPreferences.getInt(Constants.BACK_COLOR, R.color.white);
             defaultTextColor = mSharedPreferences.getInt(Constants.TEXT_COLOR, R.color.black_de);
-           // toolbar.setTitle(getString(R.string.create_new_diary));
             mTimeStamp = Calendar.getInstance().getTimeInMillis();
             mBinding.textViewDate.setText(setDate(mTimeStamp));
         }
@@ -160,6 +157,7 @@ public class CreateNote extends AppCompatActivity {
                 isSpeaking = true;
                 mTalking_item.setVisible(false);
                 mDone_talking_item.setVisible(true);
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         }
 
@@ -188,6 +186,7 @@ public class CreateNote extends AppCompatActivity {
         Snackbar.make(mBinding.textView2, R.string.diary_stopped, Snackbar.LENGTH_LONG);
         mTalking_item.setVisible(true);
         mDone_talking_item.setVisible(false);
+        getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     private void closePdfViewer(){

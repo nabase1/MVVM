@@ -1,21 +1,13 @@
 package com.nabase1.mvvm;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
-import android.os.ParcelFileDescriptor;
-import android.provider.DocumentsContract;
-import android.util.Log;
 import android.widget.Toast;
-
-import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +16,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Objects;
 
-import static android.content.Context.MODE_PRIVATE;
 
 public class storageUtils {
 
