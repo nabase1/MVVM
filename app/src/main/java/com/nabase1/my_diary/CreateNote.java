@@ -1,11 +1,10 @@
-package com.nabase1.mvvm;
+package com.nabase1.my_diary;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,12 +21,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
-
 import com.google.android.material.snackbar.Snackbar;
-import com.nabase1.mvvm.databinding.ActivityCreateNoteBinding;
+import com.nabase1.my_diary.databinding.ActivityCreateNoteBinding;
 import com.vikramezhil.droidspeech.DroidSpeech;
 import com.vikramezhil.droidspeech.OnDSListener;
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,12 +32,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
 import petrov.kristiyan.colorpicker.ColorPicker;
 
-import static com.nabase1.mvvm.Constants.LOG_IN;
-import static com.nabase1.mvvm.Constants.LOG_IN_CODE;
-import static com.nabase1.mvvm.Constants.OPEN_FILE;
+import static com.nabase1.my_diary.Constants.*;
 
 public class CreateNote extends AppCompatActivity {
 
@@ -72,21 +66,21 @@ public class CreateNote extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        if(intent.hasExtra(Constants.EXTRA_ID)){
-            defaultBackgroundColor = mSharedPreferences.getInt(Constants.BACK_COLOR, R.color.white);
-            defaultTextColor = mSharedPreferences.getInt(Constants.TEXT_COLOR, R.color.black_de);
-           defaultBackgroundColor = intent.getIntExtra(Constants.TEXT_PRIORITY, defaultBackgroundColor);
-            mTimeStamp = intent.getLongExtra(Constants.TIME_STAMP, Calendar.getInstance().getTimeInMillis());
-            mBinding.editTextBody.setText(intent.getStringExtra(Constants.TEXT_DESCRIPTION));
-            mBinding.textViewDate.setText(setDate(mTimeStamp));
+        if(intent.hasExtra(EXTRA_ID)){
+            defaultBackgroundColor = mSharedPreferences.getInt(BACK_COLOR, R.color.white);
+            defaultTextColor = mSharedPreferences.getInt(TEXT_COLOR1, R.color.black_de);
+           defaultBackgroundColor = intent.getIntExtra(TEXT_PRIORITY, defaultBackgroundColor);
+           defaultTextColor = intent.getIntExtra(TEXT_COLOR2, defaultTextColor);
+            mTimeStamp = intent.getLongExtra(TIME_STAMP, Calendar.getInstance().getTimeInMillis());
+            mBinding.editTextBody.setText(intent.getStringExtra(TEXT_DESCRIPTION));
 
         }else {
-            defaultBackgroundColor = mSharedPreferences.getInt(Constants.BACK_COLOR, R.color.white);
-            defaultTextColor = mSharedPreferences.getInt(Constants.TEXT_COLOR, R.color.black_de);
+            defaultBackgroundColor = mSharedPreferences.getInt(BACK_COLOR, 1);
+            defaultTextColor = mSharedPreferences.getInt(TEXT_COLOR1, R.color.black_de);
             mTimeStamp = Calendar.getInstance().getTimeInMillis();
-            mBinding.textViewDate.setText(setDate(mTimeStamp));
         }
 
+        mBinding.textViewDate.setText(setDate(mTimeStamp));
         mBinding.constraintLayout.setBackgroundColor(defaultBackgroundColor);
         mBinding.editTextBody.setTextColor(defaultTextColor);
         mBinding.textView2.setTextColor(defaultTextColor);
@@ -210,20 +204,21 @@ public class CreateNote extends AppCompatActivity {
 
             String desc = mBinding.editTextBody.getText().toString();
 
-            Intent data = new Intent(this, MainActivity.class);
+            Intent data = new Intent(CreateNote.this, MainActivity.class);
 
-            data.putExtra(Constants.TEXT_TITLE, title);
-            data.putExtra(Constants.TEXT_DESCRIPTION,desc);
-            data.putExtra(Constants.TIME_STAMP, Calendar.getInstance().getTimeInMillis());
-            data.putExtra(Constants.TEXT_PRIORITY, defaultBackgroundColor);
+            data.putExtra(TEXT_TITLE, title);
+            data.putExtra(TEXT_DESCRIPTION,desc);
+            data.putExtra(TIME_STAMP, Calendar.getInstance().getTimeInMillis());
+            data.putExtra(TEXT_PRIORITY, defaultBackgroundColor);
+            data.putExtra(TEXT_COLOR2, defaultTextColor);
 
-            int id = getIntent().getIntExtra(Constants.EXTRA_ID, -1);
+            int id = getIntent().getIntExtra(EXTRA_ID, -1);
 
             if(id != -1){
-                long timestamp = getIntent().getLongExtra(Constants.TIME_STAMP, Calendar.getInstance().getTimeInMillis());
+                long timestamp = getIntent().getLongExtra(TIME_STAMP, Calendar.getInstance().getTimeInMillis());
 
-                data.putExtra(Constants.EXTRA_ID, id);
-                data.putExtra(Constants.TIME_STAMP, timestamp);
+                data.putExtra(EXTRA_ID, id);
+                data.putExtra(TIME_STAMP, timestamp);
             }
 
             if(!multiLines.isEmpty()){
@@ -231,7 +226,7 @@ public class CreateNote extends AppCompatActivity {
             }
 
             if(mUri != null){
-                startActivityForResult(data, Constants.ADD_NOTE_REQUEST_CODE);
+                startActivityForResult(data, ADD_NOTE_REQUEST_CODE);
             }
              setResult(RESULT_OK, data);
             finish();
@@ -256,13 +251,11 @@ public class CreateNote extends AppCompatActivity {
                     this, setDate(mTimeStamp)+".txt", getString(R.string.app_name), mBinding.editTextBody.getText().toString());
 
         }else {
-            Toast.makeText(this, "internal Storage", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(this, "internal Storage", Toast.LENGTH_SHORT).show();
             storageUtils.setTextInStorage(getDir(getString(R.string.app_name), MODE_PRIVATE),
                     getApplicationContext(), setDate(mTimeStamp)+".txt", getString(R.string.app_name),mBinding.editTextBody.getText().toString());
         }
     }
-
-
 
     public String setDate(Long timeStamp){
         Date date=new Date(timeStamp);
@@ -294,7 +287,7 @@ public class CreateNote extends AppCompatActivity {
                     public void onChooseColor(int position, int color) {
                         defaultBackgroundColor = color;
                         mBinding.constraintLayout.setBackgroundColor(defaultBackgroundColor);
-                        mSharedPreferences.edit().putInt(Constants.BACK_COLOR, defaultBackgroundColor).apply();
+                        mSharedPreferences.edit().putInt(BACK_COLOR, defaultBackgroundColor).apply();
                     }
 
                     @Override
@@ -330,7 +323,7 @@ public class CreateNote extends AppCompatActivity {
                         mBinding.editTextBody.setTextColor(defaultTextColor);
                         mBinding.textView2.setTextColor(defaultTextColor);
                         mBinding.textViewDate.setTextColor(defaultTextColor);
-                        mSharedPreferences.edit().putInt(Constants.TEXT_COLOR, defaultTextColor).apply();
+                        mSharedPreferences.edit().putInt(TEXT_COLOR1, defaultTextColor).apply();
                     }
 
                     @Override
@@ -396,7 +389,6 @@ public class CreateNote extends AppCompatActivity {
 
     }
 
-
     private void textToSpeech(){
 
         mTextToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
@@ -409,7 +401,6 @@ public class CreateNote extends AppCompatActivity {
         });
 
     }
-
 
     private void getPath(){
         mUri = getIntent().getData();

@@ -1,4 +1,4 @@
-package com.nabase1.mvvm;
+package com.nabase1.my_diary;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,22 +14,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.nabase1.mvvm.adapters.NotesAdapter;
-import com.nabase1.mvvm.databinding.ActivityMainBinding;
-import com.nabase1.mvvm.room.Notes;
-import com.nabase1.mvvm.viewModel.ViewModel;
+import com.nabase1.my_diary.adapters.NotesAdapter;
+import com.nabase1.my_diary.databinding.ActivityMainBinding;
+import com.nabase1.my_diary.room.Notes;
+import com.nabase1.my_diary.viewModel.ViewModel;
 
 import java.util.Calendar;
 
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
-import static com.nabase1.mvvm.Constants.*;
+import static com.nabase1.my_diary.Constants.*;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -98,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra(TEXT_DESCRIPTION, notes.getDescription());
             intent.putExtra(TIME_STAMP, notes.getTimeStamp());
             intent.putExtra(TEXT_PRIORITY, notes.getBackgroundColor());
+            intent.putExtra(TEXT_COLOR2, notes.getTextColor());
 
             startActivityForResult(intent, EDIT_NOTE_REQUEST_CODE);
         });
@@ -179,9 +178,10 @@ public class MainActivity extends AppCompatActivity {
                     if(!title.isEmpty()){
                         String desc = data.getStringExtra(TEXT_DESCRIPTION);
                         long timestamp = data.getLongExtra(TIME_STAMP, Calendar.getInstance().getTimeInMillis());
-                        int priority = data.getIntExtra(TEXT_PRIORITY, 1);
+                        int back_color = data.getIntExtra(TEXT_PRIORITY, R.color.white);
+                        int text_color = data.getIntExtra(TEXT_COLOR2, R.color.black_de);
 
-                        Notes notes = new Notes(title,desc,timestamp,priority);
+                        Notes notes = new Notes(title,desc,timestamp,text_color,back_color);
                         mViewModel.insert(notes);
 
                         Snackbar.make(mBinding.recyclerview, R.string.success_msg, Snackbar.LENGTH_LONG).show();
@@ -196,9 +196,10 @@ public class MainActivity extends AppCompatActivity {
                 String title = data.getStringExtra(TEXT_TITLE);
                 String desc = data.getStringExtra(TEXT_DESCRIPTION);
                 long timestamp = data.getLongExtra(TIME_STAMP, Calendar.getInstance().getTimeInMillis());
-                int priority = data.getIntExtra(TEXT_PRIORITY, 1);
+                int back_color = data.getIntExtra(TEXT_PRIORITY, R.color.white);
+                int text_color = data.getIntExtra(TEXT_COLOR2, R.color.black_de);
 
-                Notes notes = new Notes(title,desc,timestamp,priority);
+                Notes notes = new Notes(title,desc,timestamp,text_color, back_color);
                 notes.setId(id);
 
                 if(title.isEmpty() && desc.isEmpty()){

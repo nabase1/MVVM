@@ -1,4 +1,4 @@
-package com.nabase1.mvvm;
+package com.nabase1.my_diary;
 
 import android.content.Context;
 import android.net.Uri;
@@ -65,7 +65,7 @@ public class storageUtils {
             }
 
         } catch (IOException e) {
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+           // Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 

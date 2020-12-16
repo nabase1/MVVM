@@ -1,8 +1,8 @@
-package com.nabase1.mvvm;
+package com.nabase1.my_diary;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.nabase1.mvvm.room.Notes;
+import com.nabase1.my_diary.room.Notes;
 
 import java.util.List;
 

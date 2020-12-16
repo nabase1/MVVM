@@ -1,4 +1,4 @@
-package com.nabase1.mvvm.room;
+package com.nabase1.my_diary.room;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -12,12 +12,14 @@ public class Notes {
     private String title;
     private String description;
     private int backgroundColor;
+    private int textColor;
     private long timeStamp;
 
-    public Notes(String title, String description, long timeStamp, int backgroundColor) {
+    public Notes(String title, String description, long timeStamp, int textColor, int backgroundColor) {
         this.title = title;
         this.description = description;
         this.timeStamp = timeStamp;
+        this.textColor = textColor;
         this.backgroundColor = backgroundColor;
     }
 
@@ -39,6 +41,10 @@ public class Notes {
 
     public long getTimeStamp() {
         return timeStamp;
+    }
+
+    public int getTextColor() {
+        return textColor;
     }
 
     public int getBackgroundColor() {

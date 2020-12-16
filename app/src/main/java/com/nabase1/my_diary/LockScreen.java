@@ -1,4 +1,4 @@
-package com.nabase1.mvvm;
+package com.nabase1.my_diary;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -7,13 +7,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+import com.nabase1.my_diary.databinding.ActivityLockScreenBinding;
 
-import com.nabase1.mvvm.databinding.ActivityLockScreenBinding;
-
-import static com.nabase1.mvvm.Constants.SAVE_PIN_CODE;
+import static com.nabase1.my_diary.Constants.SAVE_PIN_CODE;
 
 public class LockScreen extends AppCompatActivity {
 

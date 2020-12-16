@@ -1,4 +1,4 @@
-package com.nabase1.mvvm.adapters;
+package com.nabase1.my_diary.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,10 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.nabase1.mvvm.CreateNote;
-import com.nabase1.mvvm.R;
-import com.nabase1.mvvm.databinding.ItemRowBinding;
-import com.nabase1.mvvm.room.Notes;
+import com.nabase1.my_diary.CreateNote;
+import com.nabase1.my_diary.R;
+import com.nabase1.my_diary.databinding.ItemRowBinding;
+import com.nabase1.my_diary.room.Notes;
 
 import java.util.ArrayList;
 import java.util.List;

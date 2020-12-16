@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.nabase1.mvvm">
+    package="com.nabase1.my_diary">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -13,17 +13,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LockScreen"
+        <activity android:name="com.nabase1.my_diary.LockScreen"
                 android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".WelcomeScreen">
+        <activity android:name="com.nabase1.my_diary.WelcomeScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CreateNote">
+        <activity android:name="com.nabase1.my_diary.CreateNote">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -46,9 +46,9 @@
                 <data android:host="*" />
             </intent-filter>
         </activity>
-        <activity android:name=".About" />
+        <activity android:name="com.nabase1.my_diary.About" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.nabase1.my_diary.MainActivity"
             android:launchMode="singleTop" />
     </application>
 

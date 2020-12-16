@@ -1,4 +1,4 @@
-package com.nabase1.mvvm;
+package com.nabase1.my_diary;
 
 import android.content.Context;
 import android.speech.tts.TextToSpeech;

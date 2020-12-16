@@ -1,4 +1,4 @@
-package com.nabase1.mvvm.room;
+package com.nabase1.my_diary.room;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -7,8 +7,6 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
-
-import com.nabase1.mvvm.R;
 
 import java.util.Calendar;
 
@@ -50,7 +48,7 @@ public abstract class NoteDatabase extends RoomDatabase {
         protected Void doInBackground(Void... voids) {
 
             long timeStamp = Calendar.getInstance().getTimeInMillis();
-            mNoteDao.insert(new Notes("title 1", "description 1", timeStamp, R.color.white));
+        //    mNoteDao.insert(new Notes("title 1", "description 1", timeStamp,R.color.black_de, R.color.white));
             return null;
         }
     }

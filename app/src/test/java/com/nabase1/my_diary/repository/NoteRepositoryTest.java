@@ -1,8 +1,6 @@
-package com.nabase1.mvvm.repository;
+package com.nabase1.my_diary.repository;
 
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class NoteRepositoryTest {
 

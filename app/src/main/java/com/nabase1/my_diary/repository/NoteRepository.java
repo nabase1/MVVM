@@ -1,13 +1,13 @@
-package com.nabase1.mvvm.repository;
+package com.nabase1.my_diary.repository;
 
 import android.app.Application;
 import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
 
-import com.nabase1.mvvm.room.NoteDao;
-import com.nabase1.mvvm.room.NoteDatabase;
-import com.nabase1.mvvm.room.Notes;
+import com.nabase1.my_diary.room.NoteDao;
+import com.nabase1.my_diary.room.NoteDatabase;
+import com.nabase1.my_diary.room.Notes;
 
 import java.util.List;
 

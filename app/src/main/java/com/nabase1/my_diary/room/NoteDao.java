@@ -1,4 +1,4 @@
-package com.nabase1.mvvm.room;
+package com.nabase1.my_diary.room;
 
 
 import androidx.lifecycle.LiveData;

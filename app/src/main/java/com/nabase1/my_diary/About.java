@@ -1,4 +1,4 @@
-package com.nabase1.mvvm;
+package com.nabase1.my_diary;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -10,8 +10,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
-
-import com.nabase1.mvvm.databinding.ActivityAboutBinding;
+import com.nabase1.my_diary.databinding.ActivityAboutBinding;
 
 
 public class About extends AppCompatActivity {

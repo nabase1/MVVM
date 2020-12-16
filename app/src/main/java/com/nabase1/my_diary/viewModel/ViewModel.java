@@ -1,4 +1,4 @@
-package com.nabase1.mvvm.viewModel;
+package com.nabase1.my_diary.viewModel;
 
 import android.app.Application;
 
@@ -6,8 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.nabase1.mvvm.repository.NoteRepository;
-import com.nabase1.mvvm.room.Notes;
+import com.nabase1.my_diary.repository.NoteRepository;
+import com.nabase1.my_diary.room.Notes;
 
 import java.util.List;
 

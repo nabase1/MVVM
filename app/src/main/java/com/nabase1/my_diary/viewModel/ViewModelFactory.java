@@ -1,4 +1,4 @@
-package com.nabase1.mvvm.viewModel;
+package com.nabase1.my_diary.viewModel;
 
 import android.app.Application;
 
@@ -17,6 +17,6 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new com.nabase1.mvvm.viewModel.ViewModel(mApplication);
+        return (T) new com.nabase1.my_diary.viewModel.ViewModel(mApplication);
     }
 }
