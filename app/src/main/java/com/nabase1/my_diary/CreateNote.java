@@ -6,9 +6,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
+import android.graphics.fonts.Font;
+import android.graphics.fonts.Font.Builder;
+import android.graphics.fonts.FontFamily;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +22,7 @@ import android.os.Environment;
 import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,8 +30,11 @@ import android.view.WindowManager;
 import android.widget.Toast;
 import com.google.android.material.snackbar.Snackbar;
 import com.nabase1.my_diary.databinding.ActivityCreateNoteBinding;
+import com.nabase1.my_diary.databinding.ChooseFontDialogBinding;
 import com.vikramezhil.droidspeech.DroidSpeech;
 import com.vikramezhil.droidspeech.OnDSListener;
+
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,6 +60,9 @@ public class CreateNote extends AppCompatActivity {
     private boolean pdfViewer = false;
     private boolean isSpeaking = false;
     private Uri mUri;
+    AlertDialog mAlertDialog;
+    private AlertDialog.Builder mBuilder;
+    private String defaultFont = "abel-regular.ttf";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,15 +84,21 @@ public class CreateNote extends AppCompatActivity {
             defaultTextColor = mSharedPreferences.getInt(TEXT_COLOR1, R.color.black_de);
            defaultBackgroundColor = intent.getIntExtra(TEXT_PRIORITY, defaultBackgroundColor);
            defaultTextColor = intent.getIntExtra(TEXT_COLOR2, defaultTextColor);
+           defaultFont = intent.getStringExtra(FONT_FAMILY);
             mTimeStamp = intent.getLongExtra(TIME_STAMP, Calendar.getInstance().getTimeInMillis());
             mBinding.editTextBody.setText(intent.getStringExtra(TEXT_DESCRIPTION));
+
 
         }else {
             defaultBackgroundColor = mSharedPreferences.getInt(BACK_COLOR, 1);
             defaultTextColor = mSharedPreferences.getInt(TEXT_COLOR1, R.color.black_de);
+            defaultFont = intent.getStringExtra(DEFAULT_FONT_FAMILY);
             mTimeStamp = Calendar.getInstance().getTimeInMillis();
+
+
         }
 
+        selectFontFamily(defaultFont);
         mBinding.textViewDate.setText(setDate(mTimeStamp));
         mBinding.constraintLayout.setBackgroundColor(defaultBackgroundColor);
         mBinding.editTextBody.setTextColor(defaultTextColor);
@@ -90,6 +109,30 @@ public class CreateNote extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v ->{ if(isSpeaking){
                                     mDroidSpeech.closeDroidSpeechOperations();}
                                     onBackPressed(); } );
+
+        // creating dialog
+        mBuilder = new AlertDialog.Builder(this);
+
+        mBuilder.setTitle(R.string.dialog_header);
+        mBuilder.setMessage(R.string.dialog_info);
+
+        mBuilder.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.parse("package:" + getPackageName()));
+                startActivity(intent);
+            }
+        });
+
+        mBuilder.setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mAlertDialog.dismiss();
+            }
+        });
+
+        mAlertDialog = mBuilder.create();
 
 
     }
@@ -141,17 +184,11 @@ public class CreateNote extends AppCompatActivity {
         }
 
         if(id == R.id.item_speech_to_text){
-            checkPermission();
+
             if(pdfViewer){
                 closePdfViewer();
             }
-
-                mBinding.editTextBody.setHint(R.string.listen_msg);
-                mDroidSpeech.startDroidSpeechRecognition();
-                isSpeaking = true;
-                mTalking_item.setVisible(false);
-                mDone_talking_item.setVisible(true);
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+              checkPermission();
 
         }
 
@@ -171,13 +208,17 @@ public class CreateNote extends AppCompatActivity {
             }
             startActivity(new Intent(this, About.class));
         }
+
+        if(id == R.id.item_text_font){
+            showFontDialog();
+        }
         return true;
     }
 
     private void stopListening(){
         mDroidSpeech.closeDroidSpeechOperations();
         isSpeaking = false;
-        Snackbar.make(mBinding.textView2, R.string.diary_stopped, Snackbar.LENGTH_LONG);
+        Toast.makeText(this,R.string.diary_stopped, Toast.LENGTH_LONG).show();
         mTalking_item.setVisible(true);
         mDone_talking_item.setVisible(false);
         getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -211,6 +252,7 @@ public class CreateNote extends AppCompatActivity {
             data.putExtra(TIME_STAMP, Calendar.getInstance().getTimeInMillis());
             data.putExtra(TEXT_PRIORITY, defaultBackgroundColor);
             data.putExtra(TEXT_COLOR2, defaultTextColor);
+            data.putExtra(FONT_FAMILY, defaultFont);
 
             int id = getIntent().getIntExtra(EXTRA_ID, -1);
 
@@ -338,11 +380,19 @@ public class CreateNote extends AppCompatActivity {
     private void checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!(ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)) {
-                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                        Uri.parse("package:" + getPackageName()));
-                startActivity(intent);
-                finish();
+
+                mAlertDialog.show();
+
             }
+            else {
+                mBinding.editTextBody.setHint(R.string.listen_msg);
+                mDroidSpeech.startDroidSpeechRecognition();
+                isSpeaking = true;
+                mTalking_item.setVisible(false);
+                mDone_talking_item.setVisible(true);
+                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            }
+
         }
     }
 
@@ -385,7 +435,19 @@ public class CreateNote extends AppCompatActivity {
             public void onDroidSpeechError(String errorMsg) {
                 Log.d(TAG, errorMsg);
             }
+
+//            @Override
+//            public void onDroidSpeechAudioPermissionStatus(boolean audioPermissionGiven, String errorMsgIfAny)
+//            {
+//                if(!audioPermissionGiven){
+//                    Snackbar.make(mBinding.editTextBody, "Access denied to use microphone!", Snackbar.LENGTH_LONG).show();
+//                }
+//
+//            }
+
+
         });
+
 
     }
 
@@ -438,6 +500,72 @@ public class CreateNote extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void showFontDialog() {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        ChooseFontDialogBinding fontDialogBinding = ChooseFontDialogBinding.inflate(inflater);
+
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
+                .setView(fontDialogBinding.getRoot())
+                .create();
+
+        alertDialog.show();
+
+        fontDialogBinding.buttonCancel.setOnClickListener(v -> {
+            alertDialog.dismiss();
+        });
+
+        fontDialogBinding.buttonConfirm.setOnClickListener(v -> {
+
+            if(fontDialogBinding.radioDefault.isChecked()){
+                defaultFont = "abel-regular.ttf";
+                selectFontFamily(defaultFont);
+            }
+
+            if(fontDialogBinding.radioMonospace.isChecked()){
+                defaultFont = "Anonymous.ttf";
+                selectFontFamily(defaultFont);
+            }
+            if (fontDialogBinding.radioSanSarif.isChecked()) {
+                defaultFont = "livingston_sanserif.otf";
+                selectFontFamily(defaultFont);
+            }
+            if (fontDialogBinding.radioMontag.isChecked()) {
+                defaultFont = "lux_montag.ttf";
+                selectFontFamily(defaultFont);
+            }
+            if (fontDialogBinding.radioDephiana.isChecked()) {
+                defaultFont = "dephiana.otf";
+                selectFontFamily(defaultFont);
+            }
+            if (fontDialogBinding.radioRaphtalia.isChecked()) {
+                defaultFont = "raphtalia.otf";
+                selectFontFamily(defaultFont);
+            }
+            if (fontDialogBinding.radioAlleyster.isChecked()) {
+                defaultFont = "alleyster.otf";
+                selectFontFamily(defaultFont);
+            }
+
+            if(fontDialogBinding.radioThinkDreams.isChecked()){
+                defaultFont = "thinkdreams_italic.otf";
+                selectFontFamily(defaultFont);
+            }
+
+            mSharedPreferences.edit().putString(DEFAULT_FONT_FAMILY, defaultFont).apply();
+
+            alertDialog.dismiss();
+
+        });
+    }
+
+    private void selectFontFamily(String path){
+        Typeface tf = null;
+        if(path != null){
+             tf = Typeface.createFromAsset(getAssets(), path);
+        }
+        mBinding.editTextBody.setTypeface(tf);
     }
 
     @Override

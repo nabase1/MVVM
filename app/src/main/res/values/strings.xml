@@ -30,4 +30,9 @@
     <string name="mismatch_error">PIN do not match!, Re Enter</string>
     <string name="next">Next</string>
     <string name="back">Back</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_ok">Ok</string>
+    <string name="dialog_header">Permission</string>
+    <string name="dialog_info">My Diary need to access your microphone before you can use this feature</string>
+    <string name="select_font">Select Font</string>
 </resources>

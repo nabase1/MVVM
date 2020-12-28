@@ -14,10 +14,12 @@ public class Notes {
     private int backgroundColor;
     private int textColor;
     private long timeStamp;
+    private String fontFamily;
 
-    public Notes(String title, String description, long timeStamp, int textColor, int backgroundColor) {
+    public Notes(String title, String description, String fontFamily, long timeStamp, int textColor, int backgroundColor) {
         this.title = title;
         this.description = description;
+        this.fontFamily = fontFamily;
         this.timeStamp = timeStamp;
         this.textColor = textColor;
         this.backgroundColor = backgroundColor;
@@ -49,5 +51,9 @@ public class Notes {
 
     public int getBackgroundColor() {
         return backgroundColor;
+    }
+
+    public String getFontFamily() {
+        return fontFamily;
     }
 }

@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra(TIME_STAMP, notes.getTimeStamp());
             intent.putExtra(TEXT_PRIORITY, notes.getBackgroundColor());
             intent.putExtra(TEXT_COLOR2, notes.getTextColor());
+            intent.putExtra(FONT_FAMILY, notes.getFontFamily());
 
             startActivityForResult(intent, EDIT_NOTE_REQUEST_CODE);
         });
@@ -180,8 +181,9 @@ public class MainActivity extends AppCompatActivity {
                         long timestamp = data.getLongExtra(TIME_STAMP, Calendar.getInstance().getTimeInMillis());
                         int back_color = data.getIntExtra(TEXT_PRIORITY, R.color.white);
                         int text_color = data.getIntExtra(TEXT_COLOR2, R.color.black_de);
+                        String font = data.getStringExtra(FONT_FAMILY);
 
-                        Notes notes = new Notes(title,desc,timestamp,text_color,back_color);
+                        Notes notes = new Notes(title,desc,font,timestamp,text_color,back_color);
                         mViewModel.insert(notes);
 
                         Snackbar.make(mBinding.recyclerview, R.string.success_msg, Snackbar.LENGTH_LONG).show();
@@ -198,8 +200,9 @@ public class MainActivity extends AppCompatActivity {
                 long timestamp = data.getLongExtra(TIME_STAMP, Calendar.getInstance().getTimeInMillis());
                 int back_color = data.getIntExtra(TEXT_PRIORITY, R.color.white);
                 int text_color = data.getIntExtra(TEXT_COLOR2, R.color.black_de);
+                String font = data.getStringExtra(FONT_FAMILY);
 
-                Notes notes = new Notes(title,desc,timestamp,text_color, back_color);
+                Notes notes = new Notes(title,desc,font,timestamp,text_color, back_color);
                 notes.setId(id);
 
                 if(title.isEmpty() && desc.isEmpty()){

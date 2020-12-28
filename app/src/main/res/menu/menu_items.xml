@@ -15,6 +15,12 @@
         app:showAsAction="always"/>
 
     <item
+        android:id="@+id/item_text_font"
+        android:icon="@drawable/ic_baseline_title_24"
+        android:title=""
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/item_save"
         android:icon="@drawable/ic_baseline_check_24"
         android:title=""

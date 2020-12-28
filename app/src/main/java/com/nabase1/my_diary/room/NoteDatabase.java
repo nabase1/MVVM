@@ -6,11 +6,12 @@ import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import java.util.Calendar;
 
-@Database(entities = Notes.class, version = 1)
+@Database(entities = Notes.class, version = 2)
 public abstract class NoteDatabase extends RoomDatabase {
 
     private static NoteDatabase instance;
@@ -18,16 +19,28 @@ public abstract class NoteDatabase extends RoomDatabase {
     public abstract NoteDao mNoteDao();
 
     public static synchronized NoteDatabase getInstance(Context context){
+
         if(instance == null){
             instance = Room.databaseBuilder(context.getApplicationContext(),
                     NoteDatabase.class, "note_database")
-                    .fallbackToDestructiveMigration()
+                    .addMigrations(MIGRATION_1_2)
                     .addCallback(roomCallback)
                     .build();
 
         }
         return instance;
     }
+
+    /**
+     * migrating to version 2, adding fontFamily column
+     */
+    public  static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE note_table "
+                    + " ADD COLUMN fontFamily TEXT null");
+        }
+    };
 
     public static RoomDatabase.Callback roomCallback = new RoomDatabase.Callback(){
         @Override

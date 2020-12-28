@@ -19,5 +19,6 @@ public class Constants {
     public static final String LOG_IN_CODE = "LOG_IN_CODE";
     public static final String LOG_IN = "LOG_IN";
     public static final String CHANGE_PIN = "CHANGE_PIN";
-
+    public static final String FONT_FAMILY = "FONT_FAMILY";
+    public static final String DEFAULT_FONT_FAMILY = "DEFAULT_FONT_FAMILY";
 }

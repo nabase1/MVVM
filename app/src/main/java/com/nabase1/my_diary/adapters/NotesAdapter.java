@@ -1,6 +1,7 @@
 package com.nabase1.my_diary.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.AdapterViewH
 
     private List<Notes> mNotesList;
     private OnItemClickListener mListener;
+    private Context mContext;
 
     public NotesAdapter() {
         mNotesList = new ArrayList<>();
@@ -30,9 +32,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.AdapterViewH
     @Override
     public AdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        Context context = parent.getContext();
+        mContext = parent.getContext();
 
-       ItemRowBinding ItemRowBinding = DataBindingUtil.inflate(LayoutInflater.from(context),
+       ItemRowBinding ItemRowBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext),
                 R.layout.item_row,parent,false);
 
         return new AdapterViewHolder(ItemRowBinding.getRoot());
@@ -77,6 +79,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.AdapterViewH
         }
 
         public void bind(Notes notes){
+            String path = notes.getFontFamily();
+            Typeface tf = null;
+            if(path != null){
+                tf = Typeface.createFromAsset(mContext.getAssets(), path);
+                mBinding.textViewTitle.setTypeface(tf);
+            }
             mBinding.textViewTitle.setText(notes.getTitle());
            // mBinding.textViewDescription.setText(desc + "..." );
             mBinding.textViewPriority.setText(new CreateNote().setDate(notes.getTimeStamp()));
